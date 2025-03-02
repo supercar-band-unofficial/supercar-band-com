@@ -1,0 +1,13 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Sign In{% endblock %}
+
+{% block page_content %}
+    <div class="container container--small">
+        {% block sign_in %}
+            {{ sign_in|safe }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block page_sidebar %}{% endblock %}

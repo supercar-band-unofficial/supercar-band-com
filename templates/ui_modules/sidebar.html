@@ -1,0 +1,7 @@
+{% if let Some(sign_in) = sign_in %}
+{{ sign_in|safe }}
+{% endif %}
+{% if let Some(account_summary) = account_summary %}
+{{ account_summary|safe }}
+{% endif %}
+{{ chat_box|safe }}

@@ -1,0 +1,43 @@
+<section id="page-comments">
+    <h2>{{ title }}</h2>
+    <div class="page-comments-form">
+        <div class="comment">
+            <div class="comment__profile {% if !self::is_guest_user(username) %}comment__profile--link{% endif %}">
+                {% macro profile_avatar(username, profile_picture_filename) %}
+                    <picture class="comment__profile__picture">
+                        <img
+                            src="/assets/images/profile-pictures/{{ profile_picture_filename }}"
+                            alt="Profile picture for {{ username }}. Activate to visit their profile."
+                            width="48"
+                            height="48"
+                            onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                        >
+                    </picture>
+                    <div class="comment__profile__username" aria-hidden="true">
+                        {{ username }}
+                    </div>
+                {% endmacro %}
+                {% if self::is_guest_user(username) %}
+                    {% call profile_avatar(username, profile_picture_filename) %}
+                {% else %}
+                <a href="{{ self::create_user_profile_href(username) }}">
+                    {% call profile_avatar(username, profile_picture_filename) %}
+                </a>
+                {% endif %}
+            </div>
+            <div class="comment__entry">
+                <form action="{{ Self::get_submit_action(self) }}" method="post" class="flex flex-gap--small flex-align-items-end mb-4">
+                    <div class="form-control">
+                        <label for="comment-section-comment">Leave a Comment</label>
+                        <textarea id="comment-section-comment" required name="comment" maxlength="5000" autocomplete="off" style="min-height: 1.5rem"></textarea>
+                    </div>
+                    <button type="submit" class="button button--primary button--outline button--elevated">
+                        Post
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{ self::get_comment_group(comments_with_replies, section, section_tag_id, redirect_url_encoded)|safe }}
+    {{ pagination|safe }}
+</section>

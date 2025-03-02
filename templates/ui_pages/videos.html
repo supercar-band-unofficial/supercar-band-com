@@ -1,0 +1,56 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Videos{{ content.seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - Videos{{ content.seo_title }}</title>
+    {% endif %}
+    {{ content.videos_edit_bar|safe }}
+    <h1 class="h2 flex flex-wrap flex-align-items-center">
+        {% if content.video_category_title.is_none() %}
+            Videos
+        {% endif %}
+        {% if let Some(video_category_title) = content.video_category_title %}
+            <a
+                href="/videos/"
+                hx-boost="true"
+                hx-push-url="true"
+                hx-target="#main-article"
+                hx-swap="innerHtml show:window:top"
+            >Videos</a>
+            <span class="bi bi-chevron-right fs-4 mx-2" aria-hidden="true"></span>
+            {% if content.video_view.is_some() %}
+                <a
+                    href="/videos/{{ content.video_category_slug }}"
+                    hx-boost="true"
+                    hx-push-url="true"
+                    hx-target="#main-article"
+                    hx-swap="innerHtml show:window:top"
+                >{{ video_category_title }}</a>
+                <span class="bi bi-chevron-right fs-4 mx-2" aria-hidden="true"></span>
+                {{ content.video_title }}
+            {% endif %}
+            {% if content.video_view.is_none() %}
+                {{ video_category_title }}
+            {% endif %}
+        {% endif %}
+    </h1>
+    {% if let Some(video_view) = content.video_view %}
+        {{ video_view|safe }}
+    {% endif %}
+    {% if let Some(video_list) = content.video_list %}
+        {{ video_list|safe }}
+    {% endif %}
+    {% if let Some(video_category_list) = content.video_category_list %}
+        {% if let Some(video_category_description) = content.video_category_description %}
+            <p>{{ self::make_content_links(video_category_description)|safe }}</p>
+        {% endif %}
+        {{ video_category_list|safe }}
+    {% endif %}
+    {% block page_comments %}
+        {% if let Some(comment_section) = content.comment_section %}
+            {{ comment_section|safe }}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

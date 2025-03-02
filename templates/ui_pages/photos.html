@@ -1,0 +1,56 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Photos{{ content.seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - Photos{{ content.seo_title }}</title>
+    {% endif %}
+    {{ content.photos_edit_bar|safe }}
+    <h1 class="h2 flex flex-wrap flex-align-items-center">
+        {% if content.photo_album_title.is_none() %}
+            Photos
+        {% endif %}
+        {% if let Some(photo_album_title) = content.photo_album_title %}
+            <a
+                href="/photos/"
+                hx-boost="true"
+                hx-push-url="true"
+                hx-target="#main-article"
+                hx-swap="innerHtml show:window:top"
+            >Photos</a>
+            <span class="bi bi-chevron-right fs-4 mx-2" aria-hidden="true"></span>
+            {% if content.photo_view.is_some() %}
+                <a
+                    href="/photos/{{ content.photo_album_slug }}"
+                    hx-boost="true"
+                    hx-push-url="true"
+                    hx-target="#main-article"
+                    hx-swap="innerHtml show:window:top"
+                >{{ photo_album_title }}</a>
+                <span class="bi bi-chevron-right fs-4 mx-2" aria-hidden="true"></span>
+                {{ content.photo_title }}
+            {% endif %}
+            {% if content.photo_view.is_none() %}
+                {{ photo_album_title }}
+            {% endif %}
+        {% endif %}
+    </h1>
+    {% if let Some(photo_album_list) = content.photo_album_list %}
+        {{ photo_album_list|safe }}
+    {% endif %}
+    {% if let Some(photo_list) = content.photo_list %}
+        {% if let Some(photo_album_description) = content.photo_album_description %}
+            <p>{{ self::make_content_links(photo_album_description)|safe }}</p>
+        {% endif %}
+        {{ photo_list|safe }}
+    {% endif %}
+    {% if let Some(photo_view) = content.photo_view %}
+        {{ photo_view|safe }}
+    {% endif %}
+    {% block page_comments %}
+        {% if let Some(comment_section) = content.comment_section %}
+            {{ comment_section|safe }}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

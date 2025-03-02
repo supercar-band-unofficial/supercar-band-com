@@ -1,0 +1,25 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Sign In{% endblock %}
+
+{% block page_content %}
+    <div class="container container--small">
+        <form action="/chat-box/?redirect-to={{ content.redirect_url_encoded }}" method="post">
+            <h1 class="h2">Submit Chatbox Comment</h1>
+            {% if let Some(validation_alert) = content.validation_alert %}
+                {{ validation_alert|safe }}
+            {% endif %}
+            {% if content.allow_submit %}
+                <p>Since you are not logged in, you must complete a captcha challenge in order to proceed.</p>
+                <input type="hidden" name="comment" value="{{ content.comment }}">
+                {{ content.captcha|safe }}
+                <div class="flex flex-justify-content-between mt-4">
+                    <a class="button" href="{{ content.redirect_url }}">Cancel</a>
+                    <button type="submit" class="button button--primary button--elevated">Submit</button>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block page_sidebar %}{% endblock %}

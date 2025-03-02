@@ -1,0 +1,8 @@
+<img
+    class="image image--centered"
+    src="/assets/images/photos/{{ photo.photo_filename }}"
+    alt="{% if photo.title.len() > 0 %}{{ photo.title }}{% else %}Untitled{% endif %}"
+>
+{% if photo.description.len() > 0 %}
+<p>{{ self::make_content_links(photo.description)|safe }}</p>
+{% endif %}

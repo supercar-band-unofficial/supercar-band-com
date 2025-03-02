@@ -1,0 +1,94 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}{{ self::get_page_title(content) }}{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        enctype="multipart/form-data"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">{{ self::get_page_title(content) }}</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <div class="form-control form-control--select">
+                <label for="edit-photo-album">Album</label>
+                <select
+                    id="edit-photo-album"
+                    name="album"
+                    autocomplete="off"
+                    {% if !content.is_create %}disabled{% endif %}
+                >
+                    {% for album in content.albums %}
+                    <option
+                        value="{{ album.slug }}"
+                        {% if album.slug == content.selected_album_slug %}selected{% endif %}>
+                        {{- album.title -}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+            </div>
+            <div class="form-control">
+                <label for="edit-photo-title">Title</label>
+                <input id="edit-photo-title" name="title" value="{{ content.title }}" maxlength="100" autocomplete="off">
+            </div>
+            <div class="form-control">
+                <label for="edit-photo-description">Description</label>
+                <textarea id="edit-photo-description" name="description" maxlength="1000" autocomplete="off">{{ content.description }}</textarea>
+            </div>
+            {% if content.is_create %}
+            <section class="card">
+                <h2 class="h3">Upload Image</h2>
+                <img id="edit-photo-image-preview" src="{{ content.photo_file_path }}" alt="Current Photo" class="image image--centered" width="200" height="200" style="background-color: var(--text-color-base)">
+                <input type="hidden" name="temporary-photo" value="{{ content.temporary_photo_filename }}" autocomplete="off">
+                <div class="form-control">
+                    <label for="edit-photo-select-image">Select Image</label>
+                    <input id="edit-photo-select-image" name="photo" type="file" autocomplete="off">
+                </div>
+                <p id="edit-photo-upload-message" hidden></p>
+            </section>
+            {% endif %}
+            <script>
+                (() => {
+                    const editPhotoInput = document.getElementById('edit-photo-select-image');
+                    const editPhotoImagePreview = document.getElementById('edit-photo-image-preview');
+                    const editPhotoUploadMessage = document.getElementById('edit-photo-upload-message');
+                    let previewUrl = '';
+                    editPhotoInput.addEventListener('change', function(event) {
+                        URL.revokeObjectURL(previewUrl);
+                        previewUrl = URL.createObjectURL(event.target?.files[0]);
+                        editPhotoImagePreview.src = previewUrl;
+                    });
+                    editPhotoImagePreview.addEventListener('load', function() {
+                        if (previewUrl) {
+                            editPhotoUploadMessage.removeAttribute('hidden');
+                            editPhotoUploadMessage.textContent = 'You must click "Submit" to finalize the upload.'; 
+                            document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                            document.addEventListener('supercar:navigated', cleanUpPreviewUrl);
+                        }
+                    });
+                    editPhotoImagePreview.addEventListener('error', function() {
+                        editPhotoUploadMessage.removeAttribute('hidden');
+                        editPhotoUploadMessage.textContent = 'The file does not appear to be a valid image.'; 
+                    });
+                    function cleanUpPreviewUrl() {
+                        URL.revokeObjectURL(previewUrl);
+                        document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                    }
+                })();
+            </script>
+            <div class="flex flex-justify-content-between mt-4">
+                <a class="button" href="{{ self::get_cancel_href(content) }}">Cancel</a>
+                <button type="submit" class="button button--primary button--elevated">Submit</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

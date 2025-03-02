@@ -1,0 +1,33 @@
+<h2 style="transform: translateX(-0.9rem)">
+    「{{ song_name }}」by
+    <a
+        href="/tabs/{{ band_slug }}/"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >{{ band_name }}</a>
+</h2>
+
+{% if tabs.len() > 0 %}
+<ul
+    class="activity-feed"
+    hx-boost="true"
+    hx-push-url="true"
+    hx-target="#main-article"
+    hx-swap="innerHtml show:window:top"
+>
+    {% for tab in tabs %}
+    <li class="activity-feed__item">
+        <a href="{{ self::create_tab_href(band_slug, tab) }}">{{ tab.tab_type.as_display() }}</a>
+        by
+        <a href="{{ self::create_user_profile_href(tab.username) }}">{{ tab.username }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are currently no tabs for this song uploaded.
+    {% if is_signed_in %}Use the edit bar at the top of this page to add tabs.
+    {% else %}In order to add tabs to this page, you must sign in first.{% endif %}
+</p>
+{% endif %}

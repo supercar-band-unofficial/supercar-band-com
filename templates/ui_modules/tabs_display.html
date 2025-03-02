@@ -1,0 +1,12 @@
+<h2 hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:window:top">
+    Lead Guitar tabs for
+    <a href="/tabs/{{ band_slug }}/{{ song_slug }}/">「{{ song_name }}」</a>
+    by
+    <a href="/tabs/{{ band_slug }}/">{{ band_name }}</a>
+</h2>
+<p hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:window:top">
+    Posted by <a href="{{ self::create_user_profile_href(contributor) }}">{{ contributor }}</a>
+</p>
+<pre class="card card--alt" style="font-family: monospace; overflow-x: scroll;">
+    {{- tab.tab_content -}}
+</pre>

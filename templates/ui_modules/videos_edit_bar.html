@@ -1,0 +1,117 @@
+{% if can_create_video_category || can_create_video || can_edit_video_category ||
+    can_edit_video || can_delete_video_category || can_delete_video %}
+<div class="main__article__edit-bar">
+    Modify this page:
+    {% if can_create_video_category || can_create_video %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-add-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Add
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-add-toggle">
+                {% if can_create_video %}
+                <li role="presentation">
+                    {% if video_category_slug.len() > 0 %}
+                        <a href="/editor/create/video/{{ video_category_slug }}/" role="menuitem">New Video</a>
+                    {% else %}
+                        <a href="/editor/create/video/" role="menuitem">New Video</a>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if can_create_video_category %}
+                <li role="presentation">
+                    <a href="/editor/create/video-category/" role="menuitem">New Video Category</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_edit_video_category || can_edit_video %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-edit-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Edit
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-edit-toggle">
+                {% if can_edit_video %}
+                <li role="presentation">
+                    <a href="/editor/update/video/{{ video_category_slug }}/{{ video_slug }}/" role="menuitem">
+                        <strong>Edit Video:</strong> {% if video_title.len() > 0 %}{{ video_title }}{% else %}Untitled{% endif %}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_edit_video_category %}
+                <li role="presentation">
+                    <a href="/editor/update/video-category/{{ video_category_slug }}/" role="menuitem">
+                        <strong>Edit Video Category:</strong> {{ video_category_title }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_delete_video_category || can_delete_video %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-delete-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Delete
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-delete-toggle">
+                {% if can_delete_video %}
+                <li role="presentation">
+                    <a href="/editor/delete/video/{{ video_category_slug }}/{{ video_slug }}/" role="menuitem">
+                        <strong>Delete Video:</strong> {% if video_title.len() > 0 %}{{ video_title }}{% else %}Untitled{% endif %}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_delete_video_category %}
+                <li role="presentation">
+                    <a href="/editor/delete/video-category/{{ video_category_slug }}/" role="menuitem">
+                        <strong>Delete Video Category:</strong> {{ video_category_title }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+</div>
+{% endif %}

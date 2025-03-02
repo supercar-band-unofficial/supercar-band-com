@@ -1,0 +1,58 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Tabs{{ content.seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - Tabs{{ content.seo_title }}</title>
+    {% endif %}
+    {{ content.tabs_edit_bar|safe }}
+    <div class="flex flex-align-items-start flex-justify-content-between flex-wrap flex-gap--medium mb-4">
+        <div class="flex flex-grow-0">
+            <h1 class="h2 m-0">
+                {{ content.band_name }} Tabs
+                <span class="sr-only">{{ content.seo_title }}</span>
+            </h1>
+            <nav
+                class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+                tabindex="0"
+                aria-label="Select a band"
+                data-is="menu-toggle-button"
+            >
+                <span
+                    id="band-list-toggle"
+                    class="bi bi-caret-down-fill"
+                    aria-hidden="true"
+                    role="button"
+                    aria-haspopup="menu"
+                    aria-expanded="true"
+                    aria-label="Choose a Band"
+                    data-menu-toggle
+                ></span>
+                <div class="popover" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+                    <ul class="list--menu" role="menu" aria-labelledby="band-list-toggle">
+                        {% for band in content.bands %}
+                        <li role="presentation">
+                            <a href="/tabs/{{ band.band_slug }}/" role="menuitem">{{ band.band_name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% if let Some(tabs_display) = content.tabs_display %}
+        {{ tabs_display|safe }}
+    {% endif %}
+    {% if let Some(tabs_song_detail) = content.tabs_song_detail %}
+        {{ tabs_song_detail|safe }}
+    {% endif %}
+    {% if let Some(tabs_song_list) = content.tabs_song_list %}
+        {{ tabs_song_list|safe }}
+    {% endif %}
+    {% block page_comments %}
+        {% if let Some(comment_section) = content.comment_section %}
+            {{ comment_section|safe }}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

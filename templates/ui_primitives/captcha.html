@@ -1,0 +1,15 @@
+<section class="card">
+    <h2 class="h3">Human Verification</h2>
+    <img
+        src="/captchas/{{ captcha_id }}/captcha.png"
+        alt="Generated captcha image"
+        class="image image--centered mt-0"
+        width="200"
+        height="110"
+    >
+    <input type="hidden" name="captcha-id" value="{{ captcha_id }}">
+    <div class="form-control">
+        <label for="{{ form_id_prefix }}-captcha">Type the Characters Above</label>
+        <input id="{{ form_id_prefix }}-captcha" name="captcha-entry" autocomplete="off">
+    </div>
+</section>

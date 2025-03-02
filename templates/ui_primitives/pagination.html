@@ -1,0 +1,80 @@
+{% if page_count > 1 %}
+<div class="pagination-container">
+    <ul class="pagination" role="menubar" aria-label="Pagination">
+        <li class="pagination__item pagination__item--previous {% if current_page == 1 %}pagination__item--inactive{% endif %}" role="presentation">
+            <a
+                href="{{ Self::create_first_page_href(self) }}"
+                class="pagination__link"
+                role="menuitemradio"
+                aria-checked="false"
+                aria-label="First Page"
+                aria-hidden="{% if current_page == 1 %}true{% else %}false{% endif %}"
+                tabindex="{% if current_page == 1 %}-1{% else %}0{% endif %}"
+                hx-boost="true"
+                hx-target="#{{ hx_target }}"
+            >
+                &laquo;
+            </a>
+        </li>
+        <li class="pagination__item pagination__item--previous {% if current_page == 1 %}pagination__item--inactive{% endif %}" role="presentation">
+            <a
+                href="{{ Self::create_page_href(self, current_page - 1) }}"
+                class="pagination__link"
+                role="menuitemradio"
+                aria-checked="false"
+                aria-label="Previous Page"
+                aria-hidden="{% if current_page == 1 %}true{% else %}false{% endif %}"
+                tabindex="{% if current_page == 1 %}-1{% else %}0{% endif %}"
+                hx-boost="true"
+                hx-target="#{{ hx_target }}"
+            >
+                &lsaquo;
+            </a>
+        </li>
+        {% for page in Self::get_page_range(self) %}
+            <li class="pagination__item {% if page == current_page %}pagination__item--active{% endif %}" role="presentation">
+                <a
+                    href="{{ Self::create_page_href(self, page) }}"
+                    class="pagination__link"
+                    role="menuitemradio"
+                    aria-checked="{{ page == current_page }}"
+                    hx-boost="true"
+                    hx-target="#{{ hx_target }}"
+                >
+                    {{ page }}
+                </a>
+            </li>
+        {% endfor %}
+        <li class="pagination__item pagination__item--next {% if current_page == page_count %}pagination__item--inactive{% endif %}" role="presentation">
+            <a
+                href="{{ Self::create_page_href(self, current_page + 1) }}"
+                class="pagination__link"
+                role="menuitemradio"
+                aria-checked="false"
+                aria-label="Next Page"
+                aria-hidden="{% if current_page == page_count %}true{% else %}false{% endif %}"
+                tabindex="{% if current_page == page_count %}-1{% else %}0{% endif %}"
+                hx-boost="true"
+                hx-target="#{{ hx_target }}"
+            >
+                &rsaquo;
+            </a>
+        </li>
+        <li class="pagination__item pagination__item--next {% if current_page == page_count %}pagination__item--inactive{% endif %}" role="presentation">
+            <a
+                href="{{ Self::create_page_href(self, page_count) }}"
+                class="pagination__link"
+                role="menuitemradio"
+                aria-checked="false"
+                aria-label="Last Page"
+                aria-hidden="{% if current_page == page_count %}true{% else %}false{% endif %}"
+                tabindex="{% if current_page == page_count %}-1{% else %}0{% endif %}"
+                hx-boost="true"
+                hx-target="#{{ hx_target }}"
+            >
+                &raquo;
+            </a>
+        </li>
+    </ul>
+</div>
+{% endif %}

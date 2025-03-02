@@ -1,0 +1,49 @@
+<section id="site-account-summary">
+    <h2>Account</h2>
+    <div class="flex flex-row flex-align-items-start">
+        <a href="{{ self::create_user_profile_href(username) }}" class="flex-grow-0 comment__profile comment__profile--link comment__profile--large mr-5">
+            <picture class="comment__profile__picture">
+                <img
+                    src="/assets/images/profile-pictures/{{ profile_picture_filename }}"
+                    alt="Profile picture for {{ username }}. Activate to visit their profile."
+                    width="48"
+                    height="48"
+                    onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                >
+            </picture>
+            <div class="comment__profile__username" aria-hidden="true">
+                {{ username }}
+            </div>
+        </a>
+        <nav class="flex-grow-1">
+            Welcome, {{ first_name }}!
+            <ul class="list--unstyled mt-1">
+                <!--li>
+                    <a href="/conversations/">
+                        <span class="bi bi-envelope mr-3" aria-hidden="true"></span>Inbox
+                    </a>
+                </li-->
+                <li>
+                    <a href="{{ self::create_user_profile_href(username) }}">
+                        <span class="bi bi-person mr-3" aria-hidden="true"></span>Profile
+                    </a>
+                </li>
+                <li>
+                    <form
+                        id="site-sign-out-form"
+                        action="/sign-out/?redirect-to={{ redirect_url_encoded }}"
+                        method="post"
+                        hx-boost="true"
+                        hx-push-url="false"
+                        hx-target="#site-account-summary"
+                        hx-swap="outerHtml show:no-scroll"
+                    >
+                        <button type="submit" class="link">
+                            <span class="bi bi-box-arrow-right mr-3" aria-hidden="true"></span>Sign Out
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>

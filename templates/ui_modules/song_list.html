@@ -1,0 +1,25 @@
+<h2>Songs A-Z</h2>
+{% if alphabetical_groups.len() > 0 %}
+<div
+    class="grid grid--auto-column-3 flex-gap--medium"
+    hx-boost="true"
+    hx-push-url="true"
+    hx-target="#main-article"
+    hx-swap="innerHtml show:window:top"
+>
+    {% for group in alphabetical_groups %}
+    <div class="mb-3">
+        <h3>{{ group.letter }}</h3>
+        <ul class="list--unstyled">
+            {% for song in group.songs %}
+            <li>
+                <a href="{{ self::create_song_href(song) }}">{{ song.song_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No songs have been added for this band.</p>
+{% endif %}

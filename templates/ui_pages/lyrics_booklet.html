@@ -1,0 +1,49 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Lyrics Booklet{{ content.seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - Lyrics Booklet{{ content.seo_title }}</title>
+    {% endif %}
+    <h1 class="h2">
+        Lyrics Booklet <span style="color: var(--text-color-muted)">for {{ content.album_name }}</span>
+    </h1>
+    <div class="mb-1" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:window:top">
+        <strong>Band:</strong> <a href="/lyrics/{{ content.band_slug }}/">{{ content.band_name }}</a>
+    </div>
+    <div class="mb-5" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:window:top">
+        <strong>Album:</strong> <a href="/lyrics/{{ content.band_slug }}/{{ content.album_slug }}/">{{ content.album_name }}</a>
+    </div>
+    {% if content.images.len() > 0 %}
+        <div>
+            <ul id="lyrics-booklet-gallery" class="list--unstyled">
+                {% for image in content.images %}
+                <li>
+                    <a href="{{ image }}" target="_blank" class="block">
+                        <img class="image" src="{{ image }}" alt="Booklet image" data-pswp-width="200" data-pswp-height="100">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <script type="module">
+            import Viewer from '/assets/js/viewer.esm.js';
+            const lyricsBookletGallery = document.getElementById('lyrics-booklet-gallery');
+            lyricsBookletGallery.addEventListener('click', (event) => { event.preventDefault(); }, true);
+            const gallery = new Viewer(lyricsBookletGallery, {
+                toolbar: {
+                    zoomIn: { show: 1, size: 'large' },
+                    zoomOut: { show: 1, size: 'large' },
+                    prev: { show: 1, size: 'large' },
+                    play: { show: 1, size: 'large' },
+                    next: { show: 1, size: 'large' },
+                    oneToOne: { show: 1, size: 'large' },
+                    reset: { show: 1, size: 'large' },
+                },
+            });
+        </script>
+    {% else %}
+        <p>No booklet images have been uploaded for this album.</p>
+    {% endif %}
+{% endblock %}

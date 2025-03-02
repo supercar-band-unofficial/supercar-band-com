@@ -1,0 +1,91 @@
+{% if can_create_tabs || can_edit_tabs || can_delete_tabs %}
+<div class="main__article__edit-bar">
+    Modify this page:
+    {% if can_create_tabs %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-add-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Add
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-add-toggle">
+                <li role="presentation">
+                    {% if !song_slug.is_empty() %}
+                    <a href="/editor/create/tabs/{{ band_slug }}/{{ song_slug}}/" role="menuitem">New Tabs</a>
+                    {% else %}
+                    <a href="/editor/create/tabs/{{ band_slug }}/" role="menuitem">New Tabs</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_edit_tabs %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-edit-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Edit
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-edit-toggle">
+                <li role="presentation">
+                    <a href="/editor/update/tabs/{{ band_slug }}/{{ song_slug }}/{{ tab_type }}/{{ contributor }}/" role="menuitem">
+                        <strong>Edit Tabs:</strong> {{ song_name }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_delete_tabs %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-delete-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Delete
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-delete-toggle">
+                <li role="presentation">
+                    <a href="/editor/delete/tabs/{{ band_slug }}/{{ song_slug}}/{{ tab_type }}/{{ contributor }}/" role="menuitem">
+                        <strong>Delete Tabs:</strong> {{ song_name }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+</div>
+{% endif %}

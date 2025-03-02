@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>SupercarBand.com - {% block page_title %}{% endblock %}</title>
+        <meta name="description" content="Become a member of SupercarBand.com and participate in the community!">
+        <meta name="keywords" content="Supercar, Japanese, band, members">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/assets/css/main.css" type="text/css" rel="preload" as="style">
+        <link href="/assets/css/main.css" type="text/css" rel="stylesheet">
+        <link href="/assets/css/bootstrap-icons.min.css" type="text/css" rel="preload" as="style">
+        <link href="/assets/css/bootstrap-icons.min.css" type="text/css" rel="stylesheet">
+        <link href="/assets/css/viewer.css" type="text/css" rel="stylesheet">
+        <meta
+            name="htmx-config"
+            content='{
+                "responseHandling":[
+                    { "code":"204", "swap": false },
+                    { "code":"[23]..", "swap": true },
+                    { "code":"[45]..", "swap": true, "error":true },
+                    { "code":"...", "swap": true }
+                ]
+            }'
+        />
+        <script defer src="/assets/js/htmx.min.js"></script>
+        <script defer src="/assets/js/main.js"></script>
+        {% block page_head %}{% endblock %}
+    </head>
+    <body>
+        {% block site_header %}
+            <header class="header">
+                <img
+                    alt="Members of Supercar, from left to right: Nakamura Koji, Furukawa Miki, Ishiwatari Junji, Tazawa Kodai"
+                    src="/assets/images/site/banner.jpg"
+                    class="header__banner"
+                    width="1825"
+                    height="344"
+                >
+                <div class="header__branding-nav">
+                    <div class="header__logo">
+                        <a href="/" hx-get="/" hx-target="#main-article" hx-push-url="true">
+                            SUPERCAR
+                            <span class="header__logo__subtitle1">スーパーカー</span>
+                            <span class="header__logo__subtitle2">UNOFFICIAL</span>
+                        </a>
+                    </div>
+                    <nav id="site-header-navbar" class="header__navbar">
+                        <ul>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-home" class="{% if active_page == crate::ui_pages::PAGE_NAME_HOME %}header__navbar__item--active{% endif %}"
+                                    href="/" hx-get="/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--home" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Home</span>
+                                    <span class="header__navbar__subtitle">ホーム</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-bio" class="{% if active_page == crate::ui_pages::PAGE_NAME_BIO %}header__navbar__item--active{% endif %}"
+                                    href="/bio/" hx-get="/bio/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--bio" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Bio</span>
+                                    <span class="header__navbar__subtitle">伝記</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-lyrics" class="{% if active_page == crate::ui_pages::PAGE_NAME_LYRICS %}header__navbar__item--active{% endif %}"
+                                    href="/lyrics/" hx-get="/lyrics/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--lyrics" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Lyrics</span>
+                                    <span class="header__navbar__subtitle">歌詞</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-tabs" class="{% if active_page == crate::ui_pages::PAGE_NAME_TABS %}header__navbar__item--active{% endif %}"
+                                    href="/tabs/" hx-get="/tabs/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--tabs" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Tabs</span>
+                                    <span class="header__navbar__subtitle">音楽本</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-photos" class="{% if active_page == crate::ui_pages::PAGE_NAME_PHOTOS %}header__navbar__item--active{% endif %}"
+                                    href="/photos/" hx-get="/photos/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--photos" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Photos</span>
+                                    <span class="header__navbar__subtitle">写真</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-videos" class="{% if active_page == crate::ui_pages::PAGE_NAME_VIDEOS %}header__navbar__item--active{% endif %}"
+                                    href="/videos/" hx-get="/videos/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--videos" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Videos</span>
+                                    <span class="header__navbar__subtitle">ビデオ</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    id="site-header-nav-item-members" class="{% if active_page == crate::ui_pages::PAGE_NAME_MEMBERS %}header__navbar__item--active{% endif %}"
+                                    href="/members/" hx-get="/members/" hx-target="#main-article" hx-push-url="true"
+                                >
+                                    <span class="header__icon header__icon--members" aria-hidden="true"></span>
+                                    <span class="header__navbar__title">Members</span>
+                                    <span class="header__navbar__subtitle">メンバー</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+        {% endblock %}
+        <main class="main">
+            <article id="main-article" class="main__article">
+                {% block page_content %}{% endblock %}
+            </article>
+            {% block page_sidebar %}
+                <aside id="main-aside" class="main__aside">
+                    {{ sidebar|safe }}
+                </aside>
+            {% endblock %}
+        </main>
+        {% block site_footer %}
+            <footer class="footer" hx-target="#main-article" hx-push-url="true" hx-swap="innerHtml show:window:top">
+                <a href="/terms-of-service/" hx-get="/terms-of-service/">Terms</a> &#8729;
+                <a href="/privacy-policy/" hx-get="/privacy-policy/">Privacy</a> &#8729;
+                <a href="/community-guidelines/" hx-get="/community-guidelines/">Community Guidelines</a>
+            </footer>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{% if categories.len() > 0 %}
+    <ul
+        class="grid grid--auto-row-small flex-gap--medium list--unstyled"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        {% for category in categories %}
+        <li>
+            <a href="{{ self::create_category_href(category) }}" class="flex flex-column text-center">
+                <div class="flex flex-grow-1 flex-align-items-end flex-justify-content-center">{{ category.title }}</div>
+                <div class="image-aspect image-aspect--16x9">
+                    <img class="image" src="{{ self::get_video_thumbnail_url(category.video_preview_url) }}" alt="Video Thumbnail" style="background: black">
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No video categories exist.</p>
+{% endif %}

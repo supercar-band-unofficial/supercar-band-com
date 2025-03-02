@@ -1,0 +1,66 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Edit Profile Picture{% endblock %}
+
+{% block page_content %}
+    <form
+        action="/editor/update/profile-picture/"
+        method="post"
+        enctype="multipart/form-data"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">Edit Profile Picture</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <section class="card">
+                <h2 class="h3">Profile Picture</h2>
+                <img id="edit-profile-picture-preview" src="{{ content.profile_picture_file_path }}" alt="Current Cover Image" class="image image--centered" width="200" height="200" style="background-color: var(--text-color-base)">
+                <input type="hidden" name="temporary-profile-picture" value="{{ content.temporary_profile_picture_filename }}" autocomplete="off">
+                <div class="form-control">
+                    <label for="edit-profile-picture">Select Image</label>
+                    <input id="edit-profile-picture" name="profile-picture" type="file" autocomplete="off">
+                </div>
+                <p id="edit-profile-picture-message" hidden></p>
+            </section>
+            <script>
+                (() => {
+                    const editProfilePictureInput = document.getElementById('edit-profile-picture');
+                    const editProfilePicturePreview = document.getElementById('edit-profile-picture-preview');
+                    const editProfilePictureUploadMessage = document.getElementById('edit-profile-picture-message');
+                    let previewUrl = '';
+                    editProfilePictureInput.addEventListener('change', function(event) {
+                        URL.revokeObjectURL(previewUrl);
+                        previewUrl = URL.createObjectURL(event.target?.files[0]);
+                        editProfilePicturePreview.src = previewUrl;
+                    });
+                    editProfilePicturePreview.addEventListener('load', function() {
+                        if (previewUrl) {
+                            editProfilePictureUploadMessage.removeAttribute('hidden');
+                            editProfilePictureUploadMessage.textContent = 'You must click "Submit" to finalize the upload. You may have to clear your browser cache afterwards to see the changes on the website.'; 
+                            document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                            document.addEventListener('supercar:navigated', cleanUpPreviewUrl);
+                        }
+                    });
+                    editProfilePicturePreview.addEventListener('error', function() {
+                        editProfilePictureUploadMessage.removeAttribute('hidden');
+                        editProfilePictureUploadMessage.textContent = 'The file does not appear to be a valid image.'; 
+                    });
+                    function cleanUpPreviewUrl() {
+                        URL.revokeObjectURL(previewUrl);
+                        document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                    }
+                })();
+            </script>
+            <div class="flex flex-justify-content-between mt-4">
+                <a class="button" href="{{ self::get_cancel_href(content) }}">Cancel</a>
+                <button type="submit" class="button button--primary button--elevated">Submit</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

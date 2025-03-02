@@ -1,0 +1,7 @@
+<div class="iframe-aspect iframe-aspect--16x9">
+    {{ self::create_video_embed_iframe(video.video_url)|safe }}
+</div>
+
+{% if video.description.len() > 0 %}
+<p>{{ self::make_content_links(video.description)|safe }}</p>
+{% endif %}

@@ -1,0 +1,68 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Edit Profile{% endblock %}
+
+{% block page_content %}
+    <form
+        action="/editor/update/profile-info/"
+        method="post"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">Edit Profile</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+        <div class="card">
+            <h2 class="h3">Contact Info</h2>
+            <div class="form-control">
+                <label for="edit-profile-email">Email</label>
+                <input id="edit-profile-email" name="email" type="email" value="{{ content.email }}" maxlength="320" autocomplete="off">
+            </div>
+        </div>
+        <div class="card">
+            <h2 class="h3">Profile Info</h2>
+            <p class="mt-0">What you fill out here will show on your public profile.</p>
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="edit-profile-first-name">First Name</label>
+                    <input id="edit-profile-first-name" name="first-name" value="{{ content.first_name }}" maxlength="30" autocomplete="off">
+                </div>
+                <div class="form-control">
+                    <label for="edit-profile-last-name">Last Name</label>
+                    <input id="edit-profile-last-name" name="last-name" value="{{ content.last_name }}" maxlength="30" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-control form-control--select">
+                <label for="edit-profile-gender">Gender</label>
+                <select
+                    id="edit-profile-gender"
+                    name="gender"
+                    autocomplete="off"
+                >
+                    <option value="Male" {% if content.gender == "Male" %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if content.gender == "Female" %}selected{% endif %}>Female</option>
+                    <option value="Unknown" {% if content.gender == "Unknown" %}selected{% endif %}>Unknown</option>
+                </select>
+                <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+            </div>
+            <div class="form-control">
+                <label for="edit-profile-country">Country</label>
+                <input id="edit-profile-country" name="country" value="{{ content.country }}" maxlength="1024" autocomplete="off">
+            </div>
+            <div class="form-control">
+                <label for="edit-profile-about-me">About Me</label>
+                <textarea id="edit-profile-about-me" name="about-me" maxlength="4096" autocomplete="off">{{ content.about_me }}</textarea>
+            </div>
+        </div>
+        <div class="flex flex-justify-content-between mt-4">
+            <a class="button" href="{{ self::get_cancel_href(content) }}">Cancel</a>
+            <button type="submit" class="button button--primary button--elevated">Submit</button>
+        </div>
+        {% endif %}
+    </form>
+{% endblock %}

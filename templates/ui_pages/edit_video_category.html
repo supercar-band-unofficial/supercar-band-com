@@ -1,0 +1,34 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}{{ self::get_page_title(content) }}{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">{{ self::get_page_title(content) }}</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <div class="form-control">
+                <label for="edit-video-category-title">Title</label>
+                <input id="edit-video-category-title" name="title" value="{{ content.title }}" maxlength="100" autocomplete="off">
+            </div>
+            <div class="form-control">
+                <label for="edit-video-category-description">Description</label>
+                <textarea id="edit-video-category-description" name="description" maxlength="1000" autocomplete="off">{{ content.description }}</textarea>
+            </div>
+            <div class="flex flex-justify-content-between mt-4">
+                <a class="button" href="{{ self::get_cancel_href(content) }}">Cancel</a>
+                <button type="submit" class="button button--primary button--elevated">Submit</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

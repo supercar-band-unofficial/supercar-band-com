@@ -1,0 +1,137 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Edit Lyrics{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">{{ self::get_page_title(content) }}</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <div
+                id="edit-lyrics-select-song-album-song-section"
+                hx-target="#edit-lyrics-select-song-album-song-section"
+                hx-trigger="change"
+                hx-swap="innerHTMl show:no-scroll"
+            >
+            {% block select_band_album_song %}
+                <div class="form-group">
+                    <div class="form-control form-control--select">
+                        <label for="edit-lyrics-band">Band</label>
+                        <select
+                            id="edit-lyrics-band"
+                            disabled
+                            autocomplete="off"
+                        >
+                            {% for band in content.bands %}
+                            <option
+                                value="{{ band.band_slug }}"
+                                {% if band.band_slug == content.selected_band_slug %}selected{% endif %}>
+                                {{- band.band_name -}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                    </div>
+                    <input id="edit-lyrics-band-nojs" type="hidden" name="band" value="{{ content.selected_band_slug }}">
+                    {% if content.is_create %}
+                    <script>
+                        (() => {
+                            document.getElementById('edit-lyrics-band-nojs').remove();
+                            const editLyricsBandSelect = document.getElementById('edit-lyrics-band');
+                            editLyricsBandSelect.setAttribute('name', 'band');
+                            editLyricsBandSelect.value = editLyricsBandSelect.querySelector('option[selected]').getAttribute('value');
+                            editLyricsBandSelect.removeAttribute('disabled');
+                            editLyricsBandSelect.addEventListener('change', async function() {
+                                const target = '#edit-lyrics-select-song-album-song-section';
+                                const url = `/editor/${location.pathname.split('/')[2]}/lyrics/${editLyricsBandSelect.value}/`;
+                                await htmx.ajax('GET', url, { source: target, target, swap: 'innerHTML' });
+                            });
+                        })();
+                    </script>
+                    {% endif %}
+                    <div class="form-control form-control--select">
+                        <label for="edit-lyrics-album">Album</label>
+                        <select id="edit-lyrics-album" disabled autocomplete="off">
+                            {% for album in content.albums %}
+                            <option
+                                value="{{ album.album_slug }}"
+                                {% if album.album_slug == content.selected_album_slug %}selected{% endif %}>
+                                {{- album.album_name -}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                    </div>
+                    <input id="edit-lyrics-album-nojs" type="hidden" name="album" value="{{ content.selected_album_slug }}">
+                    {% if content.is_create %}
+                    <script>
+                        (() => {
+                            document.getElementById('edit-lyrics-album-nojs').remove();
+                            const editLyricsBandSelect = document.getElementById('edit-lyrics-band');
+                            const editLyricsAlbumSelect = document.getElementById('edit-lyrics-album');
+                            editLyricsAlbumSelect.setAttribute('name', 'album');
+                            editLyricsAlbumSelect.value = editLyricsAlbumSelect.querySelector('option[selected]').getAttribute('value');
+                            editLyricsAlbumSelect.removeAttribute('disabled');
+                            editLyricsAlbumSelect.addEventListener('change', async function() {
+                                const target = '#edit-lyrics-select-song-album-song-section';
+                                const url = `/editor/${location.pathname.split('/')[2]}/lyrics/${editLyricsBandSelect.value}/${editLyricsAlbumSelect.value}/`;
+                                await htmx.ajax('GET', url, { source: target, target, swap: 'innerHTML' });
+                            });
+                        })();
+                    </script>
+                    {% endif %}
+                </div>
+                {% if let Some(no_songs_alert) = content.no_songs_alert %}
+                    {{ no_songs_alert|safe }}
+                {% else %}
+                <div class="form-control form-control--select">
+                    <label for="edit-lyrics-song">Song</label>
+                    <select id="edit-lyrics-song" name="song" autocomplete="off" {% if !content.is_create %}disabled{% endif %}>
+                        {% for song in content.songs %}
+                        <option
+                            value="{{ song.song_slug }}"
+                            {% if song.song_slug == content.selected_song_slug %}selected{% endif %}>
+                            {{- song.song_name -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+                {% endif %}
+            {% endblock %}
+            </div>
+            <div id="edit-lyrics-translation-section" class="mt-3" {% if content.no_songs_alert.is_some() %}hidden{% endif %}>
+                <div class="form-control">
+                    <label for="edit-lyrics-kanji">Kanji</label>
+                    <textarea id="edit-lyrics-kanji" name="kanji" maxlength="32000" autocomplete="off">{{ content.kanji }}</textarea>
+                </div>
+                <div class="form-control">
+                    <label for="edit-lyrics-romaji">Rōmajii</label>
+                    <textarea id="edit-lyrics-romaji" name="romaji" maxlength="4000" autocomplete="off">{{ content.romaji }}</textarea>
+                </div>
+                <div class="form-control">
+                    <label for="edit-lyrics-english">English</label>
+                    <textarea id="edit-lyrics-english" name="english" maxlength="4000" autocomplete="off">{{ content.english }}</textarea>
+                </div>
+                <div class="form-control">
+                    <label for="edit-authors-notes">Translator's Notes</label>
+                    <textarea id="edit-authors-notes" name="comment" maxlength="2000" autocomplete="off">{{ content.comment }}</textarea>
+                </div>
+                <div class="flex flex-justify-content-between mt-4">
+                    <a class="button" href="{{ self::create_cancel_href(content) }}">Cancel</a>
+                    <button type="submit" class="button button--primary button--elevated">Submit</button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

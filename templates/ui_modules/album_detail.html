@@ -1,0 +1,57 @@
+<section>
+    <h2 class="mb-1">Album: {{ album.album_name }}</h2>
+    <p class="mt-1">
+        <span class="inline-flex mr-4">
+            <strong class="mr-1">Release Date:</strong>
+            <time
+                datetime="{{ album.release_day.format("%F").to_string() }}"
+                data-is="timestamp"
+            >{{ album.release_day }}</time>
+        </span>
+        <span class="inline-flex mr-4">
+            <strong class="mr-1">Label:</strong>
+            {{ album.publisher }}
+        </span>
+        <span class="inline-flex mr-4">
+            <strong class="mr-1">Type:</strong>
+            {{ album.album_type }}
+        </span>
+    </p>
+    <div
+        class="flex flex-gap--large flex-align-items-start"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        <div class="flex-grow-0" style="width: 16rem">
+            <div class="card mb-2">
+                <img src="/assets/images/album-covers/{{ album.cover_picture_filename }}" alt="Album cover image" class="card__bg-image">
+            </div>
+            <div class="flex flex-justify-content-center">
+                <a href="/lyrics-booklet/{{ band_slug }}/{{ album.album_slug }}/">
+                    <span class="bi bi-book mr-1" aria-hidden="true"></span>Booklet
+                </a>
+            </div>
+        </div>
+        <div class="flex-grow-1">
+            {% if songs.len() > 0 %}
+            <ol class="album-song-list">
+                {% for song in songs %}
+                <li value="{{ loop.index }}">
+                    {% if song.has_translation %}
+                        <a href="{{ self::create_song_href(band_slug, album.album_slug, song.song_slug) }}">
+                            {{ song.song_name }}
+                        </a>
+                    {% else %}
+                        {{ song.song_name }}
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ol>
+            {% else %}
+            <p>No songs have been added.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,27 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Delete Tabs{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">Delete Tabs</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <p>Are you sure you wish to delete the tabs by <strong>{{ content.contributor }}</strong> for the song 「{{ content.song_name }}」?</p>
+            <div class="flex flex-justify-content-between mt-4">
+                <a class="button" href="/tabs/{{ content.band }}/{{ content.song }}/{{ content.tab_type }}/{{ content.contributor }}/">Cancel</a>
+                <button type="submit" class="button button--danger button--elevated">Delete</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

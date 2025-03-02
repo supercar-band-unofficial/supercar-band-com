@@ -1,0 +1,39 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}{{ content.seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - {{ content.seo_title }}</title>
+    {% endif %}
+    {% if let Some(members_edit_bar) = content.members_edit_bar %}
+        {{ members_edit_bar|safe }}
+    {% endif %}
+    <h1 class="h2 flex flex-wrap flex-align-items-center">
+        {% if content.username.is_empty() %}
+            Members
+        {% endif %}
+        {% if !content.username.is_empty() %}
+            <a
+                href="/members/"
+                hx-boost="true"
+                hx-push-url="true"
+                hx-target="#main-article"
+                hx-swap="innerHtml show:window:top"
+            >Members</a>
+            <span class="bi bi-chevron-right fs-4 mx-2" aria-hidden="true"></span>
+            {{ content.username }}'s Profile
+        {% endif %}
+    </h1>
+    {% if let Some(member_list) = content.member_list %}
+        {{ member_list|safe }}
+    {% endif %}
+    {% if let Some(member_profile) = content.member_profile %}
+        {{ member_profile|safe }}
+    {% endif %}
+    {% block page_comments %}
+        {% if let Some(comment_section) = content.comment_section %}
+            {{ comment_section|safe }}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,43 @@
+Username explanation:
+
+\u0020-\u0029       space to )    break to skip *
+\u002B-\u002E       + to .        break to skip /
+\u0030-\u0039       0 to 9        break to skip :
+\u003B-\u005B       ; to [        break to skip \
+\u005D-\u007E       ] to ~
+\u0080              €
+\u0082-\u008C       ‚ to Œ
+\u008E              Ž
+\u0091-\u009C       ‘ to œ
+\u009E-\u009F       ž to Ÿ
+\u00A1-\u00AC       ¡ to ¬
+\u00AE-\u00FF       ® to ÿ
+\u0100-\u024F       latin extended a + b
+\u0250-\u02AF       ipa extensions
+\u02B0-\u02FF       spacing modifier letters
+\u0300-\u036F       combining diacritical marks
+\u0370-\u03FF       greek
+\u0400-\u04FF       cyrillic
+\u2150-\u218F       number forms
+\u2190-\u21FF       arrows
+\u2200-\u22FF       mathematical operators
+\u2300-\u23FF       misc technical
+\u2460-\u24FF       enclosed alphanumerics
+\u2500-\u257F       box drawing
+\u2E80-\u2EFF       cjk radicals
+\u2F00-\u2FDF       cjk ideograph source
+\u3000-\u303F       cjk symbols and punctuation
+\u3040-\u309F       hiragana
+\u30A0-\u30FF       katakana
+\u4E00-\u9FFF       basic cjk
+\uF900-\uFAFF       cjk compatibility
+\u3400-\u4DBF       cjk extension a
+\u{20000}-\u{2A6DF} cjk extension b
+\u{2A700}-\u{2B73F} cjk extension c
+\u{2B740}-\u{2B81F} cjk extension d
+\u{2B820}-\u{2CEAF} cjk extension e
+\u{2CEB0}-\u{2EBEF} cjk extension f
+\u{2F800}-\u{2FA1F} cjk compatibility supplement
+\u{30000}-\u{3134F} cjk extension g
+
+r"^[\u0020-\u0029\u002B-\u002E\u0030-\u0039\u003B-\u005B\u005D-\u007E\u0080\u0082-\u008C\u008E\u0091-\u009C\u009E-\u009F\u00A1-\u00AC\u00AE-\u00FF\u0100-\u024F\u0250-\u02AF\u02B0-\u02FF\u0300-\u036F\u0370-\u03FF\u0400-\u04FF\u2150-\u218F\u2190-\u21FF\u2200-\u22FF\u2300-\u23FF\u2460-\u24FF\u2500-\u257F\u2E80-\u2EFF\u2F00-\u2FDF\u3000-\u303F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}-\u{2B81F}\u{2B820}-\u{2CEAF}\u{2CEB0}-\u{2EBEF}\u{2F800}-\u{2FA1F}\u{30000}-\u{3134F}]{1,30}$"

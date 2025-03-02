@@ -1,0 +1,24 @@
+{% if translations.len() > 0 %}
+<section>
+    <h2>Recent Translations</h2>
+    <ul
+        class="activity-feed"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        {% for translation in translations %}
+        <li class="activity-feed__item">
+            <a href="{{ self::create_song_href(translation) }}">{{ translation.song_name }}</a>
+            <span class="activity-feed__timestamp">
+                <time
+                    datetime="{{ translation.post_time.format("%FT%TZ").to_string() }}"
+                    data-is="timestamp"
+                >{{ translation.post_time }}</time>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}

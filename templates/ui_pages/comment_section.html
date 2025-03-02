@@ -1,0 +1,81 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Post a Comment{% endblock %}
+
+{% block page_content %}
+    <div class="container container--medium">
+        <form action="{{ self::get_submit_action(content) }}" method="post">
+            <h1 class="h2">Post a Comment</h1>
+            {% if let Some(validation_alert) = content.validation_alert %}
+                {{ validation_alert|safe }}
+            {% endif %}
+            {% if content.allow_submit %}
+                {% if let Some(reply_to_comment) = content.reply_to_comment %}
+                <div class="comment">
+                    <div class="comment__profile {% if !self::is_guest_user(reply_to_comment.username) %}comment__profile--link{% endif %}">
+                        <picture class="comment__profile__picture">
+                            <img
+                                src="/assets/images/profile-pictures/{{ reply_to_comment.profile_picture_filename }}"
+                                alt="Profile picture for {{ reply_to_comment.username }}. Activate to visit their profile."
+                                width="48"
+                                height="48"
+                                onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                            >
+                        </picture>
+                        <div class="comment__profile__username" aria-hidden="true">
+                            {{ reply_to_comment.username }}
+                        </div>
+                    </div>
+                    <div class="comment__content">
+                        {{ reply_to_comment.comment }}
+                        <div class="comment__content__footer">
+                            <time
+                                class="comment__timestamp"
+                                datetime="{{ reply_to_comment.post_time.format("%FT%TZ").to_string() }}"
+                                data-is="timestamp"
+                            >{{ reply_to_comment.post_time }}</time>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="comment-group">
+                    <div class="page-comments-form">
+                        <div class="comment">
+                            <div class="comment__profile {% if !self::is_guest_user(content.username) %}comment__profile--link{% endif %}">
+                                <picture class="comment__profile__picture">
+                                    <img
+                                        src="/assets/images/profile-pictures/{{ content.profile_picture_filename }}"
+                                        alt="Profile picture for {{ content.username }}. Activate to visit their profile."
+                                        width="48"
+                                        height="48"
+                                        onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                                    >
+                                </picture>
+                                <div class="comment__profile__username" aria-hidden="true">
+                                    {{ content.username }}
+                                </div>
+                            </div>
+                            <div class="comment__entry">
+                                <div class="flex flex-gap--small flex-align-items-end mb-4">
+                                    <div class="form-control">
+                                        <label for="comment-section-comment">Leave a Comment</label>
+                                        <textarea id="comment-section-comment" required name="comment" maxlength="5000" autocomplete="off" style="min-height: 1.5rem">{{ content.comment }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if let Some(captcha) = content.captcha %}
+                    {{ captcha|safe }}
+                {% endif %}
+                <div class="flex flex-justify-content-between mt-4">
+                    <a class="button" href="{{ content.redirect_url }}">Cancel</a>
+                    <button type="submit" class="button button--primary button--elevated">Post</button>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block page_sidebar %}{% endblock %}

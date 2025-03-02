@@ -1,0 +1,16 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Home{% endblock %}
+
+{% block page_content %}
+    <h1 class="h2">Who Are We?</h1>
+    <p hx-boost="true">
+        SupercarBand.com is a fan-site dedicated to the now defunct Japanese band: <strong>Supercar</strong>.
+        This site contains translated <a href="/lyrics/">lyrics</a>, <a href="/photos/">photos</a>,
+        <a href="/videos/">videos</a>, and a place to talk with other Supercar fans.
+    </p>
+    {{ site_activity|safe }}
+    {% block page_comments %}
+        {{ comment_section|safe }}
+    {% endblock %}
+{% endblock %}

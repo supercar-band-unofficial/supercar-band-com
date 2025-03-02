@@ -1,0 +1,47 @@
+<section
+    hx-boost="true"
+    hx-push-url="true"
+    hx-target="#main-article"
+    hx-swap="innerHtml show:window:top"
+>
+    <h2>Songs found named "{{ search }}"</h2>
+    {% if songs.len() > 0 %}
+        <ol>
+            {% for song in songs %}
+            <li>
+                <a href="{{ self::create_song_href(song) }}">「{{ song.song_name }}」</a>
+                by
+                <a href="/lyrics/{{ song.band_slug }}">{{ song.band_name }}</a>
+            </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p class="ml-4">No songs found.</p>
+    {% endif %}
+    <h2>Albums found named "{{ search }}"</h2>
+    {% if albums.len() > 0 %}
+        <ol>
+            {% for album in albums %}
+            <li>
+                <a href="{{ self::create_album_href(album) }}">{{ album.album_name }}</a>
+                by
+                <a href="/lyrics/{{ album.band_slug }}">{{ album.band_name }}</a>
+            </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p class="ml-4">No albums found.</p>
+    {% endif %}
+    <h2>Bands found named "{{ search }}"</h2>
+    {% if bands.len() > 0 %}
+        <ol>
+            {% for band in bands %}
+            <li>
+                <a href="/lyrics/{{ band.band_slug }}">{{ band.band_name }}</a>
+            </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p class="ml-4">No bands found.</p>
+    {% endif %}
+</section>

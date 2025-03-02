@@ -1,0 +1,81 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Lyrics{{ seo_title }}{% endblock %}
+
+{% block page_content %}
+    {% if needs_title_update %}
+        <title>SupercarBand.com - Lyrics{{ seo_title }}</title>
+    {% endif %}
+    {{ lyrics_edit_bar|safe }}
+    <div class="flex flex-align-items-start flex-justify-content-between flex-wrap flex-gap--medium mb-4">
+        <div class="flex flex-grow-0">
+            <h1 class="h2 m-0">
+                {{ band_name }} Lyrics
+                <span class="sr-only">{{ seo_title }}</span>
+            </h1>
+            <nav
+                class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+                tabindex="0"
+                aria-label="Select a band"
+                data-is="menu-toggle-button"
+            >
+                <span
+                    id="band-list-toggle"
+                    class="bi bi-caret-down-fill"
+                    aria-hidden="true"
+                    role="button"
+                    aria-haspopup="menu"
+                    aria-expanded="true"
+                    aria-label="Choose a Band"
+                    data-menu-toggle
+                ></span>
+                <div class="popover" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+                    <ul class="list--menu" role="menu" aria-labelledby="band-list-toggle">
+                        {% for band in bands %}
+                        <li role="presentation">
+                            <a href="/lyrics/{{ band.band_slug }}/" role="menuitem">{{ band.band_name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <form
+            action="/lyrics/{{ band_slug }}/"
+            method="get"
+            class="flex flex-grow-0"
+            hx-boost="true"
+            hx-push-url="true"
+            hx-target="#main-article"
+            hx-swap="outerHtml show:no-scroll"
+        >
+            <div class="input-group">
+                <div class="form-control form-control--small">
+                    <input name="search" aria-label="Enter a song name to search for" style="width: 12rem">
+                </div>
+                <button type="submit" class="button button--small button--elevated input-group__append">
+                    Search
+                </button>
+            </div>
+        </form>
+    </div>
+    {% if let Some(search_results) = search_results %}
+        {{ search_results|safe }}
+    {% endif %}
+    {% if let Some(recent_translations) = recent_translations %}
+        {{ recent_translations|safe }}
+    {% endif %}
+    {% if let Some(album_detail) = album_detail %}
+        {{ album_detail|safe }}
+    {% endif %}
+    {% if let Some(song_lyrics) = song_lyrics %}
+        {{ song_lyrics|safe }}
+    {% endif %}
+    {% block page_comments %}
+        {% if let Some(comment_section) = comment_section %}
+            {{ comment_section|safe }}
+        {% endif %}
+    {% endblock %}
+    {{ albums|safe }}
+    {{ song_list|safe }}
+{% endblock %}

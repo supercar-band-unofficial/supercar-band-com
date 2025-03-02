@@ -1,0 +1,136 @@
+{% if can_create_band || can_create_album || can_create_lyrics || can_edit_band || can_edit_album ||
+    can_edit_lyrics || can_delete_band || can_delete_album || can_delete_lyrics %}
+<div class="main__article__edit-bar">
+    Modify this page:
+    {% if can_create_band || can_create_album || can_create_lyrics %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-add-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Add
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-add-toggle">
+                {% if can_create_lyrics %}
+                <li role="presentation">
+                    {% if !album_slug.is_empty() %}
+                    <a href="/editor/create/lyrics/{{ band_slug }}/{{ album_slug}}/" role="menuitem">New Song Lyrics</a>
+                    {% else %}
+                    <a href="/editor/create/lyrics/{{ band_slug }}/" role="menuitem">New Song Lyrics</a>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if can_create_album %}
+                <li role="presentation">
+                    <a href="/editor/create/song-album/{{ band_slug }}/" role="menuitem">New Album</a>
+                </li>
+                {% endif %}
+                {% if can_create_band %}
+                <li role="presentation">
+                    <a href="/editor/create/band/" role="menuitem">New Band</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_edit_band || can_edit_album || can_edit_lyrics %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-edit-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Edit
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-edit-toggle">
+                {% if can_edit_lyrics %}
+                <li role="presentation">
+                    <a href="/editor/update/lyrics/{{ band_slug }}/{{ album_slug}}/{{ song_slug }}/" role="menuitem">
+                        <strong>Edit Lyrics:</strong> {{ song_name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_edit_album %}
+                <li role="presentation">
+                    <a href="/editor/update/song-album/{{ band_slug }}/{{ album_slug }}/" role="menuitem">
+                        <strong>Edit Album:</strong> {{ album_name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_edit_band %}
+                <li role="presentation">
+                    <a href="/editor/update/band/{{ band_slug }}/" role="menuitem">
+                        <strong>Edit Band:</strong> {{ band_name }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_delete_band || can_delete_album || can_delete_lyrics %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-delete-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Delete
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-delete-toggle">
+                {% if can_delete_lyrics %}
+                <li role="presentation">
+                    <a href="/editor/delete/lyrics/{{ band_slug }}/{{ album_slug}}/{{ song_slug }}/" role="menuitem">
+                        <strong>Delete Lyrics:</strong> {{ song_name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_delete_album %}
+                <li role="presentation">
+                    <a href="/editor/delete/song-album/{{ band_slug }}/{{ album_slug }}/" role="menuitem">
+                        <strong>Delete Album:</strong> {{ album_name }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_delete_band %}
+                <li role="presentation">
+                    <a href="/editor/delete/band/{{ band_slug }}/" role="menuitem">
+                        <strong>Delete Band:</strong> {{ band_name }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+</div>
+{% endif %}

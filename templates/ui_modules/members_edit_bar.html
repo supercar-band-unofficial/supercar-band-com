@@ -1,0 +1,39 @@
+<div class="main__article__edit-bar">
+    Modify this page:
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-edit-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Edit
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-edit-toggle">
+                <li role="presentation">
+                    <a href="/editor/update/profile-info/" role="menuitem">
+                        Profile Info
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="/editor/update/profile-picture/" role="menuitem">
+                        Profile Picture
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="/editor/update/profile-password/" role="menuitem">
+                        Change Password
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>

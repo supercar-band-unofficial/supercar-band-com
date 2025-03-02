@@ -1,0 +1,33 @@
+{% if users.len() > 0 %}
+    <ul
+        class="grid grid--auto-row-tiny flex-gap--medium list--unstyled"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        {% for user in users %}
+        <li>
+            <a href="{{ self::create_user_profile_href(user.username) }}" class="flex-grow-0 comment__profile comment__profile--link comment__profile--full-width">
+                <picture class="comment__profile__picture">
+                    <img
+                        src="/assets/images/profile-pictures/{{ user.profile_picture_filename }}"
+                        alt="Profile picture for {{ user.username }}. Activate to visit their profile."
+                        width="48"
+                        height="48"
+                        onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                    >
+                </picture>
+                <div class="comment__profile__username" aria-hidden="true">
+                    {{ user.username }}
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if let Some(pagination) = pagination %}
+        {{ pagination|safe }}
+    {% endif %}
+{% else %}
+    <p>No members exist.</p>
+{% endif %}

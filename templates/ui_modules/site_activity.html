@@ -1,0 +1,21 @@
+<section>
+    <h2>Site Activity</h2>
+    <ul
+        class="activity-feed"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        {% for site_event in site_events %}
+        <li class="activity-feed__item">
+            {{ site_event.comment|safe }}
+            <time
+                class="activity-feed__timestamp"
+                datetime="{{ site_event.post_time.format("%FT%TZ").to_string() }}"
+                data-is="timestamp"
+            >{{ site_event.post_time }}</time>
+        </li>
+        {% endfor %}
+    </ul>
+</section>

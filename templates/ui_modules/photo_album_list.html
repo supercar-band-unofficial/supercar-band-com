@@ -1,0 +1,24 @@
+{% if albums.len() > 0 %}
+    <ul
+        class="grid grid--auto-row-small flex-gap--small list--unstyled"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="innerHtml show:window:top"
+    >
+        {% for album in albums %}
+        <li>
+            <a href="{{ self::create_album_href(album) }}" class="flex flex-column text-center">
+                <div class="flex flex-grow-1 flex-align-items-end flex-justify-content-center">{{ album.title }}</div>
+                <div class="image-stack">
+                    <img src="/assets/images/photos/thumbs/{{ album.photo_filename_1 }}" width="152" height="152" alt="Cover 1">
+                    <img src="/assets/images/photos/thumbs/{{ album.photo_filename_2 }}" width="152" height="152" alt="Cover 2">
+                    <img src="/assets/images/photos/thumbs/{{ album.photo_filename_3 }}" width="152" height="152" alt="Cover 3">
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No photo albums exist.</p>
+{% endif %}

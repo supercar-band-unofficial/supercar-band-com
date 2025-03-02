@@ -1,0 +1,148 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Bio{% endblock %}
+
+{% block page_content %}
+    <h1 class="sr-only">Bio</h1>
+    {{ tabs|safe }}
+    <div
+        id="bio-tab-container" role="tabpanel" class="container"
+    >
+    {% block tab_container %}
+        {% match topic %}
+            {% when "band" %}
+                <p>Supercar (スーパーカー,
+                SU-PA-KA-) was a Japanese rock band active from 1995 to 2005 who made their
+                debut in 1997. Consisting of songwriter and vocalist Kōji Nakamura (中村弘二
+                Nakamura Kōji), guitarist Junji Ishiwatari (いしわたり淳治
+                Ishiwatari Junji), bassist Miki Furukawa (フルカワミキ
+                Furukawa Miki), and drummer Kōdai Tazawa (田沢公大
+                Tazawa Kōdai), Supercar is best known for their experimentation in raw rock
+                and electronica.</p>
+                <p>Part of SUPERCAR's aesthetic success stems from their
+                "ordinary country-grown" roots in the Aomori prefecture, far north from the
+                constant clamor of Tokyo. It was here that the youthful band first took shape.
+                Supercar was formed in 1995 when bassist Miki Furukawa placed an advertisement
+                in a local magazine seeking fellow musicians. Junji Ishiwatari responded and
+                convinced childhood friend Kōji Nakamura to join as well. Junji and Kōji
+                soon recruited drummer Kōdai Tazawa, an acquaintance from middle school.
+                After writing songs and recording demo tapes, they received a record contract.
+                In 1997 they released their debut album, Three Out Change, then their second
+                album, Jump Up, in 1999. Jump Up was followed by the experimental albums Ooyeah
+                and Ookeah, both also released in 1999. With the 2000 album Futurama, electronic
+                experimentation took a larger role that would characterize the band's sound
+                for the rest of their career. The 2002 release Highvision continued the
+                electronic development, (the single Strobolights did not even contain a guitar
+                in the album version). Supercar released their last album, Answer, in 2004 which
+                contained balance of rock and electronica.</p>
+                <p>In 2005, Supercar announced their plans to break up. They held one last concert
+                and released a DVD of it entitled 'Last Live'.</p>
+                <p>All album names and song titles are in English. The lyrics, mostly written by
+                Junji, are in Japanese and commonly include a couple of English words.</p>
+                <p>Internationally, Supercar is known for providing much
+                of the soundtrack for the Japanese film Ping Pong, as well as being featured in
+                the anime series Eureka Seven.</p>
+            {% when "nakamura-koji" %}
+                <img src="/assets/images/site/bio-nakamura-koji.png" alt="Nakamura Koji" width="250" height="190" class="image image--float-right">
+                <p>Koji, also known by the nickname 'Nakako' (mixture of
+                Nakamura and Koji), has had two distinct solo projects: Nyantora and iLL. He is also in a band called LAMA</p>
+                <h2 class="h3">Nyantora</h2>
+                <p>Nyantora was actually in the works while
+                Supercar was still together, but it's still worth listening if you get the
+                chance. Both Nyantora albums are completely electronic. I would
+                classify them as experimental relaxing music... not that I'm really good at
+                classifying genres.</p>
+                <p><i>Nyantora Albums:</i></p>
+                <p>&nbsp;"99-00" (May 9, 2001) - A compilation of electronic
+                experimental works, 1999-2000.</p>
+                <p>&nbsp;"COSMOS" (April 2, 2003) - A spaced themed album, as
+                hinted by the name.</p>
+                <p>A couple of Nyantora works are featured in the "NOON RECORDS COMPILATION" album.
+                    Koji also helped out in the "Honey,Sugar and Spice" album by MILK FILM as well.</p>
+                <h2 class="h3">iLL</h2>
+                <p>iLL was formed in 2006, and has released 4 full
+                albums to date.&nbsp; iLL became popular not only because Nakako formed the
+                band, but because of the ambient live performances they made with videos/lights
+                in the background. iLL also sounds almost dangerously close to Supercar in some
+                aspects.&nbsp;</p>
+                <p>Additional Musicians:&nbsp;&nbsp; Bass - Nasuno
+                Mitsuru,&nbsp; Drums - Numazawa Takashi, Synth &amp; Piano - Nishi Ryota,&nbsp;
+                and&nbsp; Chorus - Masuko Fumie.</p>
+                <p><i>iLL Albums:</i></p>
+                <p>&nbsp;"Sound by iLL" (May 31, 2006)</p>
+                <p>&nbsp;"Dead Wonderland" (March 5, 2008)</p>
+                <p>&nbsp;"Rock Album" (August 6, 2008)</p>
+                <p>&nbsp;"Force" (August 26, 2009)</p>
+                <p>&nbsp;"Minimal Maximum" (October 13, 2010)</p>
+                <p><i>iLL DVDs:</i></p>
+                <p>&nbsp;"iLLusion by iLL" (April 4, 2007)</p>
+                <p>&nbsp;"Force" and "Sound by iLL" include DVDs in the Limited Editions.</p>
+                <p><i>iLL Single Albums:</i></p>
+                <p>&nbsp;"Call My Name" (May 30, 2007)</p>
+                <p>&nbsp;"Rock" (January 28, 2009)</p>
+                <p>&nbsp;"Kiss" (May 27, 2009)</p>
+                <p>&nbsp;"Deadly Lovely" (July 29, 2009)</p>
+                <p><i>Collaboration (or remixer) Albums:&nbsp;</i></p>
+                <p>&nbsp;"Dawn - Yoake" by [iLL + Yuji Katsui]
+                (February 21, 2007)</p>
+                <p>&nbsp;"Bondage Heart - Remixes" by [Miki Furukawa]
+                (May 13, 2009)</p>
+                <p>&nbsp;"No Boys, No Cry Original Soundtrack" by
+                [Yoshinori Sunahara] (July 29, 2009)</p>
+                <p>&nbsp;"Pleasure" by [RYUKYUDISCO] (Septermber
+                23, 2009)</p>
+                <p>Official Site:&nbsp; <a href="http://www.illtheworld.jp/" target="_blank">http://www.illtheworld.jp/</a></p>
+                <h2 class="h3">LAMA</h2>
+                <p>LAMA is Nakako's current band as of 2011. He is working with old band mate Miki Furukawa and two other popular artists Hisako Tabuchi (Number Girl) and Kensuke Ushio (agraph).
+                </p><p>Official Site:&nbsp;
+                    <a href="http://www.sonymusic.co.jp/Music/Info/lama/" target="_blank">http://www.sonymusic.co.jp/Music/Info/lama/</a></p>
+                <p>Wikipedia:&nbsp;
+                    <a href="https://en.wikipedia.org/wiki/Lama_%28Japanese_band%29" target="_blank">https://en.wikipedia.org/wiki/Lama_%28Japanese_band%29</a></p>
+            {% when "furukawa-miki" %}
+                <img src="/assets/images/site/bio-furukawa-miki.png" alt="Furukawa Miki" width="250" height="190" class="image image--float-right">
+                <p>Since Supercar's breakup, Miki has released a few
+                amazing albums under her own name. &nbsp; Her solo albums are mostly rock with
+                upbeat electronica mixed in.&nbsp; Her solo stuff is genuine, and I would
+                recommend it to any starving Supercar fan. Miki is currently in a band called LAMA.</p>
+                <h3>Miki Furukawa (self-titled solo projects)</h3>
+                <p><i>Miki Furukawa Albums:</i></p>
+                <p>&nbsp;'Mirrors' (2006)</p>
+                <p>&nbsp;'Bondage Heart' (2008)</p>
+                <p>&nbsp;'Very' (2010)&nbsp;</p>
+                <p><i>Miki Furukawa Single Albums:</i></p>
+                <p>&nbsp;'Coffee and SingingGirl!!!' (2006)</p>
+                <p>&nbsp;'Psycho America' (2007)</p>
+                <p>&nbsp;'Candy Girl' (2008)</p>
+                <p>&nbsp;'Saihate' (2009)</p>
+                <p><i>Other Albums Including Miki Furukawa:</i></p>
+                <p>&nbsp;'Lingkaran for Baby' (2007) - A various artist
+                compilation</p>
+                <p>&nbsp;'Bondage Heart - Remixes' (2009)</p>
+                <p>Official Site: &nbsp;<a href="http://www.furukawamiki.jp/" target="_blank">http://www.furukawamiki.jp/</a></p>
+                <h3>LAMA</h3>
+                <p>LAMA is Miki's current band as of 2011. She is working with old band mate Nakamura Koji and two other popular artists Hisako T
+                abuchi (Number Girl) and Kensuke Ushio (agraph).
+                </p><p>Official Site:&nbsp; <a href="http://www.sonymusic.co.jp/Music/Info/lama/" target="_blank">http://www.sonymusic.co.jp/Music/Info/lama/</a></p>
+                <p>Wikipedia:&nbsp; <a href="https://en.wikipedia.org/wiki/Lama_%28Japanese_band%29" target="_blank">https://en.wikipedia.org/wiki/Lama_%28Japanese_band%29</a></p>
+            {% when "ishiwatari-junji" %}
+                <img src="/assets/images/site/bio-ishiwatari-junji.png" alt="Ishiwatari Junji" width="250" height="190" class="image image--float-right">
+                <p>There are only a few things I know for sure about Junji
+                after Supercar broke up.&nbsp; He has worked with a band called S.R.S in 2009.&nbsp;
+                Specifically, I know he writes lyrics, but I'm not sure whether he's helping
+                with the music or producing it or what. &nbsp;</p>
+                <p><i>S.R.S Albums:</i></p>
+                <p>&nbsp;'Sometimes' (2009)</p>
+                <p>&nbsp;'Wonder Song' (2009)</p>
+                <p>He's helped out with a lot of minor stuff it seems.&nbsp;
+                This site contains a list of his latest 'works', which are really a bunch of
+                albums he helped out with:</p>
+                <p><a href="http://kihon.eplus2.jp/" target="_blank">http://kihon.eplus2.jp/</a></p>
+            {% when "tazawa-kodai" %}
+                <img src="/assets/images/site/bio-tazawa-kodai.png" alt="Tazawa Kodai" width="250" height="190" class="image image--float-right">
+                <p>Kodai has played in a band called aM formed in 2001, and later in a band called HOODIS formed in 2006.</p>
+                <p>aM Official: <a href="http://www.26666.org/" target="_blank">http://www.26666.org/</a></p>
+            {% when _ %}
+        {% endmatch %}
+    {% endblock %}
+    </div>
+{% endblock %}

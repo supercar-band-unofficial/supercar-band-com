@@ -1,0 +1,70 @@
+{% if let Some(email_alert) = email_alert %}
+    {{ email_alert|safe }}
+{% endif %}
+
+<div class="my-8 flex flex-gap--large">
+    <div class="flex-grow-0 comment__profile comment__profile--large">
+        <picture class="comment__profile__picture">
+            <img
+                src="/assets/images/profile-pictures/{{ user.profile_picture_filename }}"
+                alt="Profile picture for {{ user.username }}."
+                width="48"
+                height="48"
+                onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+            >
+        </picture>
+        <div class="comment__profile__username" aria-hidden="true">
+            {{ user.username }}
+        </div>
+    </div>
+    <div class="flex flex-column flex-grow-1 flex-justify-content-between">
+        <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+        <div style="color: var(--text-color-muted)">
+            <p class="m-0">Joined on
+                <time
+                    datetime="{{ user.join_time.format("%F").to_string() }}"
+                    data-is="timestamp"
+                >{{ user.join_time }}</time> 
+            </p>
+            <p class="m-0">Last seen
+                <time
+                    datetime="{{ user.last_login_time.format("%F").to_string() }}"
+                    data-is="timestamp"
+                >{{ user.last_login_time }}</time> 
+            </p>
+        </div>
+    </div>
+</div>
+
+{% if !user.about_me.is_empty() %}
+<p class="flex flex-gap--large mt-4 mb-0">
+    <strong class="block flex-grow-0 flex-shrink-0" style="width: 6.5rem">
+        About
+    </strong>
+    <span class="flex-grow-1 m-0 text-pre-wrap">
+        {{- self::make_content_links(user.about_me)|safe -}}
+    </span>
+</p>
+{% endif %}
+
+{% if user.gender != UserGender::Unknown %}
+<p class="flex flex-gap--large mt-4 mb-0">
+    <strong class="block flex-grow-0 flex-shrink-0" style="width: 6.5rem">
+        Gender
+    </strong>
+    <span class="flex-grow-1 m-0">
+        {{ user.gender }}
+    </span>
+</p>
+{% endif %}
+
+{% if !user.country.is_empty() %}
+<p class="flex flex-gap--large mt-4 mb-0">
+    <strong class="block flex-grow-0 flex-shrink-0" style="width: 6.5rem">
+        Country
+    </strong>
+    <span class="flex-grow-1 m-0">
+        {{ user.country }}
+    </span>
+</p>
+{% endif %}

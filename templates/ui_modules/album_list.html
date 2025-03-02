@@ -1,0 +1,29 @@
+<h2>Albums</h2>
+{% if albums.len() > 0 %}
+<ul
+    class="grid grid--auto-squares grid--auto-row-small flex-gap--small list--unstyled"
+    hx-boost="true"
+    hx-push-url="true"
+    hx-target="#main-article"
+    hx-swap="innerHtml show:window:top"
+>
+    {% for album in albums %}
+    <li>
+        <a href="{{ self::create_album_href(band_slug, album.album_slug) }}" class="card">
+            <img
+                src="/assets/images/album-covers/{{ album.cover_picture_filename }}"
+                alt="Album cover"
+                class="card__bg-image card__bg-image--full-height"
+                width="100"
+                height="100"
+            >
+            <strong class="card__footer card__footer--overlay card__footer--small text-center">
+                {{- album.album_name -}}
+            </strong>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No albums have been added for this band.</p>
+{% endif %}

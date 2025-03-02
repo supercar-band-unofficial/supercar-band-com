@@ -1,0 +1,117 @@
+{% if can_create_photo_album || can_create_photo || can_edit_photo_album ||
+    can_edit_photo || can_delete_photo_album || can_delete_photo %}
+<div class="main__article__edit-bar">
+    Modify this page:
+    {% if can_create_photo_album || can_create_photo %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-3"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-add-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Add
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-add-toggle">
+                {% if can_create_photo %}
+                <li role="presentation">
+                    {% if photo_album_slug.len() > 0 %}
+                        <a href="/editor/create/photo/{{ photo_album_slug }}/" role="menuitem">New Photo</a>
+                    {% else %}
+                        <a href="/editor/create/photo/" role="menuitem">New Photo</a>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if can_create_photo_album %}
+                <li role="presentation">
+                    <a href="/editor/create/photo-album/" role="menuitem">New Photo Album</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_edit_photo_album || can_edit_photo %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-edit-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Edit
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-edit-toggle">
+                {% if can_edit_photo %}
+                <li role="presentation">
+                    <a href="/editor/update/photo/{{ photo_album_slug }}/{{ photo_id }}/" role="menuitem">
+                        <strong>Edit Photo:</strong> {% if photo_title.len() > 0 %}{{ photo_title }}{% else %}Untitled{% endif %}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_edit_photo_album %}
+                <li role="presentation">
+                    <a href="/editor/update/photo-album/{{ photo_album_slug }}/" role="menuitem">
+                        <strong>Edit Photo Album:</strong> {{ photo_album_title }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+    {% if can_delete_photo_album || can_delete_photo %}
+    <nav
+        class="button button--outline button--small button--icon button--has-focus-popover ml-2"
+        style="height: 2rem"
+        tabindex="0"
+        data-is="menu-toggle-button"
+    >
+        <span
+            id="edit-page-delete-toggle"
+            role="button"
+            aria-haspopup="menu"
+            aria-expanded="true"
+            data-menu-toggle
+        >
+            Delete
+            <span class="bi bi-caret-down-fill" aria-hidden="true"></span>
+        </span>
+        <div class="popover popover--bottom-right" hx-boost="true" hx-target="#main-article" hx-swap="innerHtml show:no-scroll">
+            <ul class="list--menu" role="menu" aria-labelledby="edit-page-delete-toggle">
+                {% if can_delete_photo %}
+                <li role="presentation">
+                    <a href="/editor/delete/photo/{{ photo_album_slug }}/{{ photo_id }}/" role="menuitem">
+                        <strong>Delete Photo:</strong> {% if photo_title.len() > 0 %}{{ photo_title }}{% else %}Untitled{% endif %}
+                    </a>
+                </li>
+                {% endif %}
+                {% if can_delete_photo_album %}
+                <li role="presentation">
+                    <a href="/editor/delete/photo-album/{{ photo_album_slug }}/" role="menuitem">
+                        <strong>Delete Photo Album:</strong> {{ photo_album_title }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+</div>
+{% endif %}

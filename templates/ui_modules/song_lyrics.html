@@ -1,0 +1,57 @@
+<section
+    hx-boost="true"
+    hx-push-url="true"
+    hx-target="#main-article"
+    hx-swap="innerHtml show:window:top"
+>
+    <h2 class="mb-1" style="transform: translateX(-0.9rem)">
+        「{{ song.song_name }}」by <a href="/lyrics/{{ band_slug }}/">{{ band_name }}</a>
+    </h2>
+    <div class="mb-1">
+        <strong>Album:</strong> <a href="/lyrics/{{ band_slug }}/{{ album_slug }}/">{{ album_name }}</a>
+    </div>
+    {% if let Some(lyrics) = lyrics %}
+        <div class="mb-1">
+            <strong>Translated By:</strong> <a href="{{ self::create_user_profile_href(lyrics.username) }}">{{ lyrics.username }}</a>
+        </div>
+        <div class="my-10">
+            <h3>Combined</h3>
+            {% for line in combined_lyrics %}
+                {% if line.kanji.len() > 0 %}
+                <div class="flex flex-align-items-start mb-1">
+                    <span class="badge badge--2-letter flex-shrink-0 flex-grow-0 mt-xs mr-2" title="Japanese">JP</span>
+                    <span>{{ line.kanji }}</span>
+                </div>
+                <div class="flex flex-align-items-start  mb-1">
+                    <span class="badge badge--2-letter flex-shrink-0 flex-grow-0 mt-xs mr-2" title="Rōmaji">RŌ</span>
+                    <span>{{ line.romaji }}</span>
+                </div>
+                <div class="flex flex-align-items-start  mb-6">
+                    <span class="badge badge--2-letter flex-shrink-0 flex-grow-0 mt-xs mr-2" title="English">EN</span>
+                    <span>{{ line.english }}</span>
+                </div>
+                {% else %}
+                <div class="my-3"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="my-10">
+            <h3>Kanji</h3>
+            <pre class="text-pre-wrap m-0">{{ lyrics.kanji_content }}</pre>
+        </div>
+        <div class="my-10">
+            <h3>Rōmaji</h3>
+            <pre class="text-pre-wrap m-0">{{ lyrics.romaji_content }}</pre>
+        </div>
+        <div class="my-10">
+            <h3>English</h3>
+            <pre class="text-pre-wrap m-0">{{ lyrics.english_content }}</pre>
+        </div>
+        {% if lyrics.comment.len() > 0 %}
+        <h3>Translator's Notes</h3>
+        <pre class="text-pre-wrap">{{ lyrics.comment }}</pre>
+        {% endif %}
+    {% else %}
+        <p>No translations have been created for this song yet.</p>
+    {% endif %}
+</section>

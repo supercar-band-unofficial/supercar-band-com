@@ -1,0 +1,170 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}{{ self::get_page_title(content) }}{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        enctype="multipart/form-data"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">{{ self::get_page_title(content) }}</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <div class="form-control form-control--select">
+                <label for="edit-album-band">Band</label>
+                <select
+                    id="edit-album-band"
+                    name="band"
+                    autocomplete="off"
+                    {% if !content.is_create %}disabled{% endif %}
+                >
+                    {% for band in content.bands %}
+                    <option
+                        value="{{ band.band_slug }}"
+                        {% if band.band_slug == content.selected_band_slug %}selected{% endif %}>
+                        {{- band.band_name -}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+            </div>
+            <div class="form-control">
+                <label for="edit-album-title">Title</label>
+                <input id="edit-album-title" name="album-name" value="{{ content.album_name }}" maxlength="100"  autocomplete="off">
+            </div>
+            <div class="form-control form-control--select">
+                <label for="edit-album-type">Type</label>
+                <select
+                    id="edit-album-type"
+                    name="album-type"
+                    autocomplete="off"
+                >
+                    {% for album_type in content.album_types %}
+                    <option
+                        value="{{ album_type.as_key() }}"
+                        {% if album_type.as_key() == content.selected_album_type %}selected{% endif %}>
+                        {{- album_type -}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+            </div>
+            <div class="form-control">
+                <label for="edit-album-publisher">Publisher</label>
+                <input id="edit-album-publisher" name="publisher" value="{{ content.publisher }}" maxlength="100"  autocomplete="off">
+            </div>
+            <div class="form-group">
+                <div class="form-control form-control--select">
+                    <label for="edit-album-month">Release Month</label>
+                    <select
+                        id="edit-album-month"
+                        name="release-month"
+                        autocomplete="off"
+                    >
+                        {% for month in content.months %}
+                        <option
+                            value="{{ month.value }}"
+                            {% if month.value == content.release_month %}selected{% endif %}>
+                            {{- month.text -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+                <div class="form-control form-control--select">
+                    <label for="edit-album-day">Release Day</label>
+                    <select
+                        id="edit-album-day"
+                        name="release-day-of-month"
+                        autocomplete="off"
+                    >
+                        {% for day in content.days %}
+                        <option
+                            value="{{ day.value }}"
+                            {% if day.value == content.release_day_of_month %}selected{% endif %}>
+                            {{- day.text -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+                <div class="form-control form-control--select">
+                    <label for="edit-album-year">Release Year</label>
+                    <select
+                        id="edit-album-year"
+                        name="release-year"
+                        autocomplete="off"
+                    >
+                        {% for year in content.years %}
+                        <option
+                            value="{{ year.value }}"
+                            {% if year.value == content.release_year %}selected{% endif %}>
+                            {{- year.text -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+            </div>
+            {% if !content.is_create %}
+                {% for i in 0..40 %}
+                <div class="form-control">
+                    <label for="edit-album-song-{{ i }}">Song {{ i + 1 }}</label>
+                    <input id="edit-album-song-{{ i }}" name="songs[{{ i }}]" value="{{ content.songs[i] }}" autocomplete="off">
+                </div>
+                {% endfor %}
+            {% endif %}
+            <section class="card">
+                <h2 class="h3">Cover Image</h2>
+                <img id="edit-album-cover-image-preview" src="{{ content.cover_picture_file_path }}" alt="Current Cover Image" class="image image--centered" width="200" height="200" style="background-color: var(--text-color-base)">
+                <input type="hidden" name="temporary-cover-image" value="{{ content.temporary_cover_picture_filename }}" autocomplete="off">
+                <div class="form-control">
+                    <label for="edit-album-cover-image">Select Image</label>
+                    <input id="edit-album-cover-image" name="cover-image" type="file" autocomplete="off">
+                </div>
+                <p id="edit-album-cover-upload-message" hidden></p>
+            </section>
+            <script>
+                (() => {
+                    const editAlbumCoverImageInput = document.getElementById('edit-album-cover-image');
+                    const editAlbumCoverImagePreview = document.getElementById('edit-album-cover-image-preview');
+                    const editAlbumCoverUploadMessage = document.getElementById('edit-album-cover-upload-message');
+                    let previewUrl = '';
+                    editAlbumCoverImageInput.addEventListener('change', function(event) {
+                        URL.revokeObjectURL(previewUrl);
+                        previewUrl = URL.createObjectURL(event.target?.files[0]);
+                        editAlbumCoverImagePreview.src = previewUrl;
+                    });
+                    editAlbumCoverImagePreview.addEventListener('load', function() {
+                        if (previewUrl) {
+                            editAlbumCoverUploadMessage.removeAttribute('hidden');
+                            editAlbumCoverUploadMessage.textContent = 'You must click "Submit" to finalize the upload. You may have to clear your browser cache afterwards to see the changes on the website.'; 
+                            document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                            document.addEventListener('supercar:navigated', cleanUpPreviewUrl);
+                        }
+                    });
+                    editAlbumCoverImagePreview.addEventListener('error', function() {
+                        editAlbumCoverUploadMessage.removeAttribute('hidden');
+                        editAlbumCoverUploadMessage.textContent = 'The file does not appear to be a valid image.'; 
+                    });
+                    function cleanUpPreviewUrl() {
+                        URL.revokeObjectURL(previewUrl);
+                        document.removeEventListener('supercar:navigated', cleanUpPreviewUrl);
+                    }
+                })();
+            </script>
+            <div class="flex flex-justify-content-between mt-4">
+                <a class="button" href="{{ self::get_cancel_href(content) }}">Cancel</a>
+                <button type="submit" class="button button--primary button--elevated">Submit</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

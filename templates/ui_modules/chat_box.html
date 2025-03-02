@@ -1,0 +1,47 @@
+<section id="site-chatbox" class="main__aside__section--sticky">
+    <h2>Chatbox</h2>
+    <div class="chatbox card">
+        <form id="site-chatbox-form" action="/chat-box/?redirect-to={{ redirect_url_encoded }}%23site-chatbox" method="post">
+            <div class="input-group">
+                <div class="form-control">
+                    <input name="comment" class="input" placeholder="Type a message..." required aria-label="Message Text" autocomplete="off">
+                </div>
+                <button class="button button--primary button--outline input-group__append input-group__button--icon" type="submit">
+                    <span class="sr-only">Send Message</span>
+                    <span class="bi bi-send-fill" aria-hidden="true"></span>
+                </button>
+            </div>
+        </form>
+        <script>
+            (() => {
+                const siteChatboxForm = document.getElementById('site-chatbox-form');
+                siteChatboxForm.addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    this.action = '/chat-box/?redirect-to=' + encodeURIComponent(window.location.href.split('#')[0] + '#site-chatbox');
+                    this.submit();
+                });
+            })();
+        </script>
+        <div class="chatbox__comments">
+            {% for comment in comments %}
+                <div class="chatbox__comment">
+                    <p>
+                        {% if self::is_guest_user(comment.username) %}
+                        <strong class="chatbox__comment__username">{{ comment.username }}</strong>:
+                        {% else %}
+                        <a href="{{ self::create_user_profile_href(comment.username) }}" class="chatbox__comment__username">
+                            {{- comment.username -}}
+                        </a>:
+                        {% endif %}
+                        {{ self::make_content_links(comment.comment)|safe }}
+                    </p>
+                    <time
+                        class="comment__timestamp"
+                        datetime="{{ comment.post_time.format("%FT%TZ").to_string() }}"
+                        data-is="timestamp"
+                    >{{ comment.post_time }}</time>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

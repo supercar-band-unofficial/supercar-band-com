@@ -1,0 +1,42 @@
+{% if photos.len() > 0 %}
+    <ul
+        id="photo-gallery"
+        class="grid grid--auto-row-small flex-gap--small list--unstyled"
+    >
+        {% for photo in photos %}
+        <li>
+            <a href="{{ self::create_photo_href(photo_album_slug, photo) }}" class="card card--link-hover">
+                <img
+                    src="/assets/images/photos/thumbs/{{ photo.photo_filename }}"
+                    class="card__bg-image card__bg-image--full-height"
+                    width="152"
+                    height="152"
+                    alt="{% if photo.title.len() > 0 %}{{ photo.title }}{% else %}Untitled{% endif %}"
+                >
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <script type="module">
+        import Viewer from '/assets/js/viewer.esm.js';
+        const photoGallery = document.getElementById('photo-gallery');
+        photoGallery.addEventListener('click', (event) => { event.preventDefault(); }, true);
+        const gallery = new Viewer(photoGallery, {
+            url(image) {
+                return image.src.replace('/thumbs/', '/');
+            },
+            title: true,
+            toolbar: {
+                zoomIn: { show: 1, size: 'large' },
+                zoomOut: { show: 1, size: 'large' },
+                prev: { show: 1, size: 'large' },
+                play: { show: 1, size: 'large' },
+                next: { show: 1, size: 'large' },
+                oneToOne: { show: 1, size: 'large' },
+                reset: { show: 1, size: 'large' },
+            },
+        });
+    </script>
+{% else %}
+    <p>No photos exist.</p>
+{% endif %}

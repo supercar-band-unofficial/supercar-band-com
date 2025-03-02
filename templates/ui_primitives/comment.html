@@ -1,0 +1,45 @@
+<li class="comment">
+    <div class="comment__profile {% if !self::is_guest_user(username) %}comment__profile--link{% endif %}">
+        {% macro profile_avatar(username, profile_picture_path) %}
+            <picture class="comment__profile__picture">
+                <img
+                    src="/assets/images/profile-pictures/{{ profile_picture_filename }}"
+                    alt="Profile picture for {{ username }}. Activate to visit their profile."
+                    width="48"
+                    height="48"
+                    onerror="this.onerror=null; this.src='/assets/images/profile-pictures/Guest.jpeg';"
+                >
+            </picture>
+            <div class="comment__profile__username" aria-hidden="true">
+                {{ username }}
+            </div>
+        {% endmacro %}
+        {% if self::is_guest_user(username) %}
+            {% call profile_avatar(username, profile_picture_path) %}
+        {% else %}
+        <a href="{{ self::create_user_profile_href(username) }}">
+            {% call profile_avatar(username, profile_picture_path) %}
+        </a>
+        {% endif %}
+    </div>
+    <div class="comment__content">
+        <p>{{ self::make_content_links(comment)|safe }}</p>
+        <div class="comment__content__footer">
+            <time
+                class="comment__timestamp"
+                datetime="{{ post_time.format("%FT%TZ").to_string() }}"
+                data-is="timestamp"
+            >{{ post_time }}</time>
+            <a href="{{ Self::get_reply_href(self) }}">Reply</a>
+        </div>
+    </div>
+</li>
+{% if replies.len() > 0 %}
+<li class="comment-group">
+    <ul>
+        {% for comment in replies %}
+            {{ comment|safe }}
+        {% endfor %}
+    </ul>
+</li>
+{% endif %}

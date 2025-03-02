@@ -1,0 +1,17 @@
+<nav class="tabs" role="tablist" aria-orientation="horizontal" aria-label="{{ aria_label }}" data-is="tabs">
+    {% for link in links %}
+        <a
+            id="{{ Self::create_tab_id(self, link.section_name) }}"
+            href="{{ Self::create_tag_href(self, link.section_name) }}"
+            class="tabs__tab {% if link.section_name == current_section_name %}tabs__tab--current{% endif %} {{ link.section_name }} {{ current_section_name }}"
+            role="tab"
+            aria-selected="{% if link.section_name == current_section_name %}true{% else %}false{% endif %}"
+            hx-boost="true"
+            hx-push-url="true"
+            hx-target="{{ hx_target }}"
+            hx-swap="innerHtml show:no-scroll"
+        >
+            {{ link.label }}
+        </a>
+    {% endfor %}
+</nav>

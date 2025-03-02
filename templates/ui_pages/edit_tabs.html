@@ -1,0 +1,107 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Edit Lyrics{% endblock %}
+
+{% block page_content %}
+    <form
+        action="{{ self::get_submit_action(content) }}"
+        method="post"
+        class="form"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+        hx-swap="outerHtml"
+    >
+        <h1 class="h2">{{ self::get_page_title(content) }}</h1>
+        {% if let Some(validation_alert) = content.validation_alert %}
+            {{ validation_alert|safe }}
+        {% endif %}
+        {% if content.has_access %}
+            <div
+                id="edit-tabs-select-band-song-section"
+                hx-target="#edit-tabs-select-band-song-section"
+                hx-trigger="change"
+                hx-swap="innerHTMl show:no-scroll"
+            >
+            {% block select_band_song %}
+                <div class="form-group">
+                    <div class="form-control form-control--select">
+                        <label for="edit-tab-band">Band</label>
+                        <select
+                            id="edit-tab-band"
+                            disabled
+                            autocomplete="off"
+                        >
+                            {% for band in content.bands %}
+                            <option
+                                value="{{ band.band_slug }}"
+                                {% if band.band_slug == content.selected_band_slug %}selected{% endif %}>
+                                {{- band.band_name -}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                    </div>
+                    <input id="edit-tab-band-nojs" type="hidden" name="band" value="{{ content.selected_band_slug }}">
+                    {% if content.is_create %}
+                    <script>
+                        (() => {
+                            document.getElementById('edit-tab-band-nojs').remove();
+                            const editTabsBandSelect = document.getElementById('edit-tab-band');
+                            editTabsBandSelect.setAttribute('name', 'band');
+                            editTabsBandSelect.value = editTabsBandSelect.querySelector('option[selected]').getAttribute('value');
+                            editTabsBandSelect.removeAttribute('disabled');
+                            editTabsBandSelect.addEventListener('change', async function() {
+                                const target = '#edit-tabs-select-band-song-section';
+                                const url = `/editor/${location.pathname.split('/')[2]}/tabs/${editTabsBandSelect.value}/`;
+                                await htmx.ajax('GET', url, { source: target, target, swap: 'innerHTML' });
+                            });
+                        })();
+                    </script>
+                    {% endif %}
+                </div>
+                {% if let Some(no_songs_alert) = content.no_songs_alert %}
+                    {{ no_songs_alert|safe }}
+                {% else %}
+                <div class="form-control form-control--select">
+                    <label for="edit-tab-song">Song</label>
+                    <select id="edit-tab-song" name="song" autocomplete="off" {% if !content.is_create %}disabled{% endif %}>
+                        {% for song in content.songs %}
+                        <option
+                            value="{{ song.song_slug }}"
+                            {% if song.song_slug == content.selected_song_slug %}selected{% endif %}>
+                            {{- song.song_name -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+                {% endif %}
+            {% endblock %}
+            </div>
+            <div id="edit-tabs-section" class="mt-3" {% if content.no_songs_alert.is_some() %}hidden{% endif %}>
+                <div class="form-control form-control--select">
+                    <label for="edit-tab-type">Instrument</label>
+                    <select id="edit-tab-type" name="tab-type" autocomplete="off" {% if !content.is_create %}disabled{% endif %}>
+                        {% for tab_type in content.tab_types %}
+                        <option
+                            value="{{ tab_type }}"
+                            {% if tab_type.to_string() == content.selected_tab_type %}selected{% endif %}>
+                            {{- tab_type.as_display() -}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-control__select-arrow bi bi-chevron-down" aria-hidden="true"></span>
+                </div>
+                <div class="form-control">
+                    <label for="edit-tab-content">Tabs</label>
+                    <textarea id="edit-tab-content" name="tab-content" maxlength="32000" autocomplete="off" style="height: 50vh">{{ content.tab_content }}</textarea>
+                </div>
+                <div class="flex flex-justify-content-between mt-4">
+                    <a class="button" href="{{ self::create_cancel_href(content) }}">Cancel</a>
+                    <button type="submit" class="button button--primary button--elevated">Submit</button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

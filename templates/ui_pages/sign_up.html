@@ -1,0 +1,49 @@
+{% extends "ui_pages/base.html" %}
+
+{% block page_title %}Sign Up{% endblock %}
+
+{% block page_content %}
+    <form
+        action="/sign-up/"
+        method="post"
+        class="form container container--small"
+        hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article"
+    >
+        <h1 class="h2">Sign Up</h1>
+        {% if let Some(alert) = alert %}
+            {{ alert|safe }}
+        {% endif %}
+        <section class="card">
+            <h2 class="h3">Your Info</h2>
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="sign-up-first-name">First Name</label>
+                    <input id="sign-up-first-name" name="first-name" value="{{ first_name }}" maxlength="30">
+                </div>
+                <div class="form-control">
+                    <label for="sign-up-last-name">Last Name</label>
+                    <input id="sign-up-last-name" name="last-name" value="{{ last_name }}" maxlength="30">
+                </div>
+            </div>
+            <div class="form-control">
+                <label for="sign-up-username">Desired Username</label>
+                <input id="sign-up-username" name="username" value="{{ username }}" maxlength="30">
+            </div>
+            <div class="form-control">
+                <label for="sign-up-password">Password</label>
+                <input id="sign-up-password" name="password">
+            </div>
+        </section>
+        {{ captcha|safe }}
+        <div class="flex flex-align-items-center">
+            <div class="flex-grow-1">
+                <p>
+                    By creating an account you agree to SupercarBand.com's <a href="/terms-of-service/" target="_blank">terms of service</a>.
+                </p>
+            </div>
+            <button class="button button--primary button--elevated">Sign Up</button>
+        </div>
+    </form>
+{% endblock %}
