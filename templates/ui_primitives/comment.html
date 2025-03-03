@@ -23,7 +23,7 @@
         {% endif %}
     </div>
     <div class="comment__content">
-        <p>{{ self::make_content_links(comment)|safe }}</p>
+        <p class="text-pre-wrap">{{ self::make_content_links(comment)|safe }}</p>
         <div class="comment__content__footer">
             <time
                 class="comment__timestamp"
