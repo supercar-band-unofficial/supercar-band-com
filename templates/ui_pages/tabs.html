@@ -1,10 +1,10 @@
 {% extends "ui_pages/base.html" %}
 
-{% block page_title %}Tabs{{ content.seo_title }}{% endblock %}
+{% block page_title %}{{ content.seo_title }}{% endblock %}
 
 {% block page_content %}
     {% if needs_title_update %}
-        <title>SupercarBand.com - Tabs{{ content.seo_title }}</title>
+        <title>{{ content.seo_title }} - SupercarBand.com</title>
     {% endif %}
     {{ content.tabs_edit_bar|safe }}
     <div class="flex flex-align-items-start flex-justify-content-between flex-wrap flex-gap--medium mb-4">

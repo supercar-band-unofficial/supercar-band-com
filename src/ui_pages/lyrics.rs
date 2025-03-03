@@ -182,7 +182,7 @@ async fn create_common_params<'a>(context: &'a LyricsPageContext) -> Result<Lyri
         );
     } else if !context.params.album.is_empty() {
         let album = database::get_album_by_slug_and_band_id(&context.params.album, band_id).await?;
-        seo_title = format!(r#" for album "{}""#, &album.album_name);
+        seo_title = format!(r#" for Album "{}" by {}"#, &album.album_name, &band_name);
         album_detail = Some(
             AlbumDetailTemplate::new(AlbumDetailParams { album, band_slug: band_slug.clone() }).await?
         );

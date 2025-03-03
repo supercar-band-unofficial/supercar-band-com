@@ -138,9 +138,9 @@ function setActiveSiteNavigationLink(detail) {
     }
     if (detail) {
         if (activeNavItem) {
-            document.title = `SupercarBand.com - ${activeNavItem.querySelector('.header__navbar__title')?.textContent}`;
+            document.title = `${activeNavItem.querySelector('.header__navbar__title')?.textContent} - SupercarBand.com`;
         } else {
-            document.title = `SupercarBand.com - ${document.querySelector('h1')?.textContent ?? ''}`;
+            document.title = `${document.querySelector('h1')?.textContent ?? ''} - SupercarBand.com`;
         }
     }
     document.body.classList.remove('viewer-open');

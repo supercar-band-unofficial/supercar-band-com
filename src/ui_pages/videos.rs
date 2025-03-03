@@ -116,7 +116,7 @@ async fn create_common_params<'a>(context: &'a VideosPageContext) -> Result<Vide
             ).await?
         );
 
-        seo_title = format!(" for video {}", context.params.video);
+        seo_title = format!(r#"Video "{}""#, &video_title);
     } else if !context.params.category.is_empty() {
         let category = database::get_video_category_by_slug(
             &context.params.category
@@ -136,13 +136,13 @@ async fn create_common_params<'a>(context: &'a VideosPageContext) -> Result<Vide
             ).await?
         );
 
-        seo_title = format!(" for video category {}", video_category_title.as_ref().unwrap());
+        seo_title = format!(r#"Video Category "{}""#, video_category_title.as_ref().unwrap());
     } else {
         video_category_list = Some(
             VideoCategoryListTemplate::new().await?
         );
         
-        seo_title = format!("");
+        seo_title = format!("Videos");
     }
 
     let videos_edit_bar = VideosEditBarTemplate::new(

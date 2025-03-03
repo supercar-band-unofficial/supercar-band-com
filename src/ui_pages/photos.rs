@@ -135,7 +135,7 @@ async fn create_common_params<'a>(context: &'a PhotosPageContext) -> Result<Phot
             ).await?
         );
 
-        seo_title = format!(" for photo album {}", &photo_album_title.as_ref().unwrap());
+        seo_title = format!(" for Photo Album {}", &photo_album_title.as_ref().unwrap());
     } else {
         photo_album_list = Some(
             PhotoAlbumListTemplate::new().await?

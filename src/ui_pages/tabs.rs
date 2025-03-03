@@ -117,7 +117,7 @@ async fn create_common_params<'a>(context: &'a TabsPageContext) -> Result<TabsTe
         );
 
         let tab_type = format::to_snake_case(&context.params.tab_type).parse::<SongTabType>().unwrap_or_else(|_| SongTabType::Unknown);
-        seo_title = format!(" - {} tabs for song 「{}」", tab_type.as_display(), &tabs_display.as_ref().unwrap().song_name);
+        seo_title = format!("{} Tabs for 「{}」 by {}", tab_type.as_display(), &tabs_display.as_ref().unwrap().song_name, &band_name);
     } else if !context.params.song.is_empty() {
         tabs_song_detail = Some(
             TabsSongDetailTemplate::new(
@@ -130,7 +130,7 @@ async fn create_common_params<'a>(context: &'a TabsPageContext) -> Result<TabsTe
                 }
             ).await?
         );
-        seo_title = format!(" for song 「{}」", &tabs_song_detail.as_ref().unwrap().song_name);
+        seo_title = format!("Guitar Tabs for 「{}」 by {}", &tabs_song_detail.as_ref().unwrap().song_name, &band_name);
     } else {
         tabs_song_list = Some(
             TabsSongListTemplate::new(
@@ -139,7 +139,7 @@ async fn create_common_params<'a>(context: &'a TabsPageContext) -> Result<TabsTe
                 }
             ).await?
         );
-        seo_title = format!(" for band {}", &band_name);
+        seo_title = format!("All Guitar Tabs for {}", &band_name);
     }
 
     let mut song_slug = None;

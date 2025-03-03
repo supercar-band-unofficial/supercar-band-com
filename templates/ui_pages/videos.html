@@ -1,10 +1,10 @@
 {% extends "ui_pages/base.html" %}
 
-{% block page_title %}Videos{{ content.seo_title }}{% endblock %}
+{% block page_title %}{{ content.seo_title }}{% endblock %}
 
 {% block page_content %}
     {% if needs_title_update %}
-        <title>SupercarBand.com - Videos{{ content.seo_title }}</title>
+        <title>{{ content.seo_title }} - SupercarBand.com</title>
     {% endif %}
     {{ content.videos_edit_bar|safe }}
     <h1 class="h2 flex flex-wrap flex-align-items-center">

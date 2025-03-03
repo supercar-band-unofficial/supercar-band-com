@@ -4,7 +4,7 @@
 
 {% block page_content %}
     {% if needs_title_update %}
-        <title>SupercarBand.com - {{ content.seo_title }}</title>
+        <title>{{ content.seo_title }} - SupercarBand.com</title>
     {% endif %}
     {% if let Some(members_edit_bar) = content.members_edit_bar %}
         {{ members_edit_bar|safe }}
