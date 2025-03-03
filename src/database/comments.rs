@@ -14,7 +14,7 @@ use super::get_pool;
 
 #[derive(Debug, Default, Display, EnumString, Type)]
 #[sqlx(type_name = "section")]
-#[sqlx(rename_all = "snake_case")]
+#[sqlx(rename_all = "lowercase")]
 #[strum(serialize_all = "snake_case")]
 pub enum CommentSectionName {
     #[default]

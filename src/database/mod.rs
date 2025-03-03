@@ -4,6 +4,7 @@ use sqlx::{
     MySqlPool,
 };
 use tokio::sync::OnceCell;
+use urlencoding::encode;
 
 #[derive(Deserialize)]
 struct SecretsConfig {
@@ -40,7 +41,7 @@ pub async fn init_pool() {
 
     let database_url: &str = &format!(
         "mysql://{}:{}@{}:{}/supercar_band",
-        config.database.user.as_str(), config.database.password.as_str(),
+        config.database.user.as_str(), encode(config.database.password.as_str()),
         config.database.host.as_str(), config.database.port,
     );
 
