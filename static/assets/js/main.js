@@ -203,7 +203,15 @@ function initializeTimestamp(element) {
             hour: 'numeric', minute: '2-digit'
         });
     } else {
-        element.textContent = new Date(dateTime).toLocaleString(undefined, {
+        const now = new Date();
+        const isoString = now.toISOString();
+        const offsetMinutes = now.getTimezoneOffset();
+        const sign = offsetMinutes > 0 ? '-' : '+';
+        const offsetHours = String(Math.floor(Math.abs(offsetMinutes) / 60)).padStart(2, '0');
+        const offsetMins = String(Math.abs(offsetMinutes) % 60).padStart(2, '0');
+        const isoWithTimezone = `${isoString.replace("Z", "")}${sign}${offsetHours}:${offsetMins}`;
+        const time = isoWithTimezone.split('T')[1];
+        element.textContent = new Date(dateTime + 'T' + time).toLocaleString(undefined, {
             year: "numeric", month: "long", day: "numeric",
         });
     }
