@@ -143,6 +143,7 @@ function setActiveSiteNavigationLink(detail) {
             document.title = `SupercarBand.com - ${document.querySelector('h1')?.textContent ?? ''}`;
         }
     }
+    document.body.classList.remove('viewer-open');
     document.dispatchEvent(new Event('supercar:navigated'));
 }
 document.addEventListener('htmx:historyRestore', () => setActiveSiteNavigationLink());
