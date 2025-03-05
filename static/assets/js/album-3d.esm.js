@@ -114,7 +114,7 @@ async function loadModelViewer() {
             render();
 
             const loader = new GLTFLoader().setPath('/assets/models/cd-case/');
-            loader.load('jewel-case.glb', async function (gltf) {
+            loader.load(`${assets.config.cd_case_type}.glb`, async function (gltf) {
 
                 try {
                     model = gltf.scene;
@@ -148,6 +148,33 @@ async function loadModelViewer() {
                     cd.children[0].material.needsUpdate = true;
 
                     assets.texturesToFree = [bookletOutside, backInsertFront, backInsertBack, cdFront, cdFrontRoughness];
+
+                    if (assets.config.cd_case_disc_holder_color) {
+                        const cdCaseDiscHolder = getModelPart('cd_case_disc_holder');
+                        cdCaseDiscHolder.material.dispose();
+                        cdCaseDiscHolder.material = new THREE.MeshStandardMaterial();
+                        cdCaseDiscHolder.material.color = new THREE.Color(assets.config.cd_case_disc_holder_color);
+                        cdCaseDiscHolder.material.needsUpdate = true;
+                        console.log(cdCaseDiscHolder);
+                    }
+
+                    if (assets.config.cd_case_back_color) {
+                        const cdCaseBack = getModelPart('cd_case_back');
+                        cdCaseBack.material.dispose();
+                        cdCaseBack.material = new THREE.MeshStandardMaterial();
+                        cdCaseBack.material.color = new THREE.Color(assets.config.cd_case_back_color);
+                        cdCaseBack.material.needsUpdate = true;
+                        console.log(cdCaseBack);
+                    }
+
+                    if (assets.config.cd_case_front_color) {
+                        const cdCaseFront = getModelPart('cd_case_front');
+                        cdCaseFront.material.dispose();
+                        cdCaseFront.material = new THREE.MeshStandardMaterial();
+                        cdCaseFront.material.color = new THREE.Color(assets.config.cd_case_front_color);
+                        cdCaseFront.material.needsUpdate = true;
+                        console.log(cdCaseFront);
+                    }
 
                     render();
 

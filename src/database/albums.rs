@@ -4,11 +4,13 @@ use std::error::Error;
 use std::io;
 use chrono::{ NaiveDateTime, NaiveDate };
 use regex::Regex;
+use serde::{ Deserialize, Serialize };
 use sqlx::{
     FromRow,
     MySql,
     Type,
 };
+use strum_macros::{ Display, EnumString };
 
 use super::get_pool;
 use crate::database::bands;
@@ -366,13 +368,44 @@ pub async fn find_albums_by_name(search: &str) -> Result<Vec<AlbumSearchResult>,
     )
 }
 
+#[derive(Debug, Default, Deserialize, Display, EnumString, Serialize)]
+#[serde(rename_all = "kebab-case")]
+#[strum(serialize_all = "snake_case")]
+pub enum Album3dType {
+    #[default]
+    JewelCase,
+    DoubleJewelCase,
+    SlimlineJewelCase,
+}
+
+#[derive(Default, Deserialize, Serialize)]
+pub struct Album3dConfig {
+    #[serde(default)]
+    pub cd_case_type: Album3dType,
+    #[serde(default)]
+    pub cd_case_back_color: String,
+    #[serde(default)]
+    pub cd_case_disc_holder_color: String,
+    #[serde(default)]
+    pub cd_case_front_color: String,
+}
+
+pub struct Album3dAssets {
+    pub config: Album3dConfig,
+    pub assets: HashMap<String, String>,
+}
+
 pub async fn get_album_3d_assets(
     band_slug: &str,
     album_slug: &str,
-) -> HashMap<String, String> {
+) -> Album3dAssets {
     let mut assets: HashMap<String, String> = HashMap::new();
+    let mut config: Album3dConfig = Album3dConfig::default();
     let path = filesystem::get_filesystem_path(ALBUM_3D_BASE_DIRECTORY).await.join(
         format!("{}/{}", band_slug, album_slug)
+    );
+    let config_path = path.join(
+        "config.toml"
     );
     let album_image_regex = Regex::new(r"\.(jpeg|jpg|png)$").unwrap();
     if let Ok(mut directory) = tokio::fs::read_dir(path).await {
@@ -382,7 +415,12 @@ pub async fn get_album_3d_assets(
                     match entry_option {
                         Some(entry) => {
                             if let Ok(file_name) = entry.file_name().into_string() {
-                                if album_image_regex.is_match(&file_name) {
+                                if &file_name == "config.toml" {
+                                    let config_toml = tokio::fs::read_to_string(&config_path)
+                                        .await.expect("Failed to read config.toml file.");
+                                    config = toml::from_str(&config_toml)
+                                        .expect("Failed to parse secrets.toml file.");
+                                } else if album_image_regex.is_match(&file_name) {
                                     let url = format!(
                                         "{}/{}/{}/{}",
                                         ALBUM_3D_BASE_URL,
@@ -408,7 +446,10 @@ pub async fn get_album_3d_assets(
             }
         }
     }
-    assets
+    Album3dAssets {
+        config,
+        assets,
+    }
 }
 
 pub async fn get_lyrics_booklet_images(
