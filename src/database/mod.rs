@@ -66,6 +66,7 @@ pub use albums::get_album_by_song_slug;
 pub use albums::get_album_summaries_by_band_id;
 pub use albums::get_albums_by_band_id;
 pub use albums::find_albums_by_name;
+pub use albums::get_album_3d_assets;
 pub use albums::get_lyrics_booklet_images;
 pub use albums::create_album;
 pub use albums::update_album;

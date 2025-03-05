@@ -1,3 +1,4 @@
+htmx.isSwapping = false;
 
 /********************\
 | Menu Toggle Button |
@@ -223,6 +224,10 @@ function initializeTimestamp(element) {
 \**************************/
 
 function initializeComponents(eventName, detail) {
+    if (eventName === 'afterSettle') {
+        htmx.isSwapping = false;
+    }
+    
     const target = detail?.target ?? document.body;
     target.querySelectorAll('[data-is]').forEach((element) => {
         const is = element.getAttribute('data-is');
@@ -234,6 +239,10 @@ function initializeComponents(eventName, detail) {
     });
 }
 function teardownComponents(eventName, detail) {
+    if (eventName === 'beforeSwap') {
+        htmx.isSwapping = true;
+    }
+
     const target = detail?.target ?? document.body;
     target.querySelectorAll('[data-is]').forEach((element) => {
         const is = element.getAttribute('data-is');

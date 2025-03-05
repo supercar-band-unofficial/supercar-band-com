@@ -610,6 +610,81 @@ body {
 }
 
 /*****************\
+| Album 3D Viewer |
+\*****************/
+
+.album-3d-opener {
+    cursor: pointer;
+    position: relative;
+}
+.album-3d-opener__icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius-small);
+    font-size: 5rem;
+    text-shadow: 0 0.25rem 0.25rem black;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: opacity 0.2s, font-size 0.2s;
+}
+.album-3d-opener:hover .album-3d-opener__icon {
+    font-size: 3rem;
+    opacity: 1;
+}
+
+.album-3d-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+}
+.album-3d-viewer__loading {
+    font-family: Roboto, Arial, sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: white;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+}
+.album-3d-viewer__controls {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 10002;
+}
+.album-3d-viewer__controls button {
+    display: block;
+    background: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: .5rem 1rem;
+    margin: 1rem 1.25rem;
+    cursor: pointer;
+    min-width: 10rem;
+}
+.album-3d-viewer__renderer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10001;
+}
+
+/*****************\
 | Album Song List |
 \*****************/
 
@@ -619,6 +694,8 @@ body {
     margin: 0;
 }
 .album-song-list li {
+    display: flex;
+    align-items: center;
     padding: 0.25rem 0;
 }
 .album-song-list li:nth-child(2n + 1) {
@@ -629,8 +706,9 @@ body {
     width: 1.5rem;
     display: inline-block;
     text-align: right;
-    margin-right: 0.25rem;
+    margin-right: 0.5rem;
     font-size: 0.75rem;
+    flex-shrink: 0;
 }
 
 /*******\

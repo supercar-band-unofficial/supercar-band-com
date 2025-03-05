@@ -1,4 +1,5 @@
 use std::fmt;
+use std::collections::HashMap;
 use std::error::Error;
 use std::io;
 use chrono::{ NaiveDateTime, NaiveDate };
@@ -13,8 +14,11 @@ use super::get_pool;
 use crate::database::bands;
 use crate::database::songs::Song;
 use crate::util::filesystem;
+use crate::util::format::to_snake_case;
 use crate::util::sql::sanitize_like_clause_value;
 
+pub static ALBUM_3D_BASE_DIRECTORY: &str = "uploads/assets/images/album-3d";
+pub static ALBUM_3D_BASE_URL: &str = "/assets/images/album-3d";
 pub static LYRICS_BOOKLET_BASE_DIRECTORY: &str = "uploads/assets/images/booklets";
 pub static LYRICS_BOOKLET_BASE_URL: &str = "/assets/images/booklets";
 
@@ -360,6 +364,51 @@ pub async fn find_albums_by_name(search: &str) -> Result<Vec<AlbumSearchResult>,
     Ok(
         result
     )
+}
+
+pub async fn get_album_3d_assets(
+    band_slug: &str,
+    album_slug: &str,
+) -> HashMap<String, String> {
+    let mut assets: HashMap<String, String> = HashMap::new();
+    let path = filesystem::get_filesystem_path(ALBUM_3D_BASE_DIRECTORY).await.join(
+        format!("{}/{}", band_slug, album_slug)
+    );
+    let album_image_regex = Regex::new(r"\.(jpeg|jpg|png)$").unwrap();
+    if let Ok(mut directory) = tokio::fs::read_dir(path).await {
+        loop {
+            match directory.next_entry().await {
+                Ok(entry_option) => {
+                    match entry_option {
+                        Some(entry) => {
+                            if let Ok(file_name) = entry.file_name().into_string() {
+                                if album_image_regex.is_match(&file_name) {
+                                    let url = format!(
+                                        "{}/{}/{}/{}",
+                                        ALBUM_3D_BASE_URL,
+                                        band_slug,
+                                        album_slug,
+                                        file_name,
+                                    );
+                                    assets.insert(
+                                        to_snake_case(&file_name.split('.').collect::<Vec<&str>>().first().unwrap()),
+                                        url,
+                                    );
+                                }
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                },
+                Err(_) => {
+                    break;
+                }
+            }
+        }
+    }
+    assets
 }
 
 pub async fn get_lyrics_booklet_images(

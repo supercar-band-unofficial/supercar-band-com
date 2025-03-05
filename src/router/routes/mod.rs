@@ -15,6 +15,7 @@ use tower_http::{
 };
 use super::authn::Backend;
 
+pub mod album_3d;
 pub mod bio;
 pub mod captcha;
 pub mod chat_box;
@@ -47,6 +48,7 @@ pub mod members;
 pub mod page_not_found;
 pub mod photos;
 pub mod privacy_policy;
+pub mod robots;
 pub mod sign_in;
 pub mod sign_out;
 pub mod sign_up;
@@ -77,6 +79,8 @@ pub fn initialize() -> Router {
 
         .route("/404", get(page_not_found::get_page_not_found))
         .route("/404/", get(page_not_found::get_page_not_found))
+
+        .route("/album-3d/{band}/{album}/assets.json", get(album_3d::get_album_3d))
 
         .route("/bio", get(bio::get_bio))
         .route("/bio/", get(bio::get_bio))
@@ -313,6 +317,8 @@ pub fn initialize() -> Router {
         .route("/privacy-policy", get(privacy_policy::get_privacy_policy))
         .route("/privacy-policy/", get(privacy_policy::get_privacy_policy))
         .route("/privacyPolicy.php", get(privacy_policy::get_privacy_policy_redirect))
+
+        .route("/robots.txt", get(robots::get_robots))
 
         .route("/sign-in", get(sign_in::get_sign_in))
         .route("/sign-in/", get(sign_in::get_sign_in))

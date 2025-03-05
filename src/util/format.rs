@@ -1,5 +1,5 @@
 use askama_escape::{ escape, Html };
-use linkify::LinkFinder;
+use linkify::{ LinkFinder, LinkKind };
 use regex::Regex;
 
 /**
@@ -29,9 +29,15 @@ pub fn make_content_links(comment: &str) -> String {
         let end = link.end();
         result.push_str(&escaped_content[last_pos..start]);
 
+        let url: String = if link.kind() == &LinkKind::Email {
+            format!("mailto:{}", link.as_str())
+        } else {
+            String::from(link.as_str())
+        };
+
         result.push_str(&format!(
             r#"<a href="{}" target="_blank">{}</a>"#,
-            link.as_str(),
+            url,
             link.as_str()
         ));
 
