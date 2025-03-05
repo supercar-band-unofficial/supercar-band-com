@@ -4,15 +4,20 @@
 
 {% block page_content %}
     <form
+        id="sign-up-form"
         action="/sign-up/"
         method="post"
         class="form container container--small"
-        hx-boost="true"
-        hx-push-url="true"
-        hx-target="#main-article"
     >
+    <!-- hx-boost="true"
+        hx-push-url="true"
+        hx-target="#main-article" -->
         <h1 class="h2">Sign Up</h1>
-        {% if let Some(alert) = alert %}
+        <noscript>
+            {{ content.no_script_warning|safe }}
+        </noscript>
+        <div id="form-alerts"></div>
+        {% if let Some(alert) = content.alert %}
             {{ alert|safe }}
         {% endif %}
         <section class="card">
@@ -20,23 +25,23 @@
             <div class="form-group">
                 <div class="form-control">
                     <label for="sign-up-first-name">First Name</label>
-                    <input id="sign-up-first-name" name="first-name" value="{{ first_name }}" maxlength="30">
+                    <input id="sign-up-first-name" name="first-name" value="{{ content.first_name }}" maxlength="30">
                 </div>
                 <div class="form-control">
                     <label for="sign-up-last-name">Last Name</label>
-                    <input id="sign-up-last-name" name="last-name" value="{{ last_name }}" maxlength="30">
+                    <input id="sign-up-last-name" name="last-name" value="{{ content.last_name }}" maxlength="30">
                 </div>
             </div>
             <div class="form-control">
                 <label for="sign-up-username">Desired Username</label>
-                <input id="sign-up-username" name="username" value="{{ username }}" maxlength="30">
+                <input id="sign-up-username" name="username" value="{{ content.username }}" maxlength="30">
             </div>
             <div class="form-control">
                 <label for="sign-up-password">Password</label>
                 <input id="sign-up-password" name="password">
             </div>
         </section>
-        {{ captcha|safe }}
+        {{ content.captcha|safe }}
         <div class="flex flex-align-items-center">
             <div class="flex-grow-1">
                 <p>
@@ -46,4 +51,33 @@
             <button class="button button--primary button--elevated">Sign Up</button>
         </div>
     </form>
+    <script>
+        (() => {
+            const form = document.getElementById('sign-up-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const powAnswer = form.querySelector('[name="pow-answer"]');
+                if (powAnswer?.value) {
+                    this.submit();
+                } else {
+                    if (form.classList.contains('form--loading')) return;
+                    form.classList.add('form--loading');
+                    form.addEventListener('supercar:pow-challenge-complete', () => {
+                        this.submit();
+                        form.classList.remove('form--loading');
+                    });
+                    form.addEventListener('supercar:pow-challenge-error', () => {
+                        const alerts = document.getElementById('form-alerts');
+                        alerts.innerHTML = `
+                            <div class="alert alert--fade-in alert--danger" role="alert" aria-live="polite">
+                                <span class="bi bi-exclamation-octagon-fill" aria-hidden="true"></span>
+                                <p>An error occurred. If you continue to see this message, please make sure you are using the newest version of a modern web browser like Chrome, Edge, Safari, or Firefox.</p>
+                            </div>
+                        `;
+                        form.classList.remove('form--loading');
+                    });
+                }
+            });
+        })();
+    </script>
 {% endblock %}

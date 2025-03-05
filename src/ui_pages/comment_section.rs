@@ -64,6 +64,7 @@ async fn create_common_params<'a>(context: &'a CommentSectionPageContext) -> Res
         Some(
             CaptchaTemplate {
                 captcha_id: generate_captcha()?,
+                pow_challenge: String::from(""),
                 form_id_prefix: "chat-box",
             }
         )

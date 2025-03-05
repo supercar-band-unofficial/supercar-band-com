@@ -44,6 +44,7 @@ async fn create_common_params<'a>(context: &'a ChatBoxPageContext) -> Result<Cha
 
     let captcha = CaptchaTemplate {
         captcha_id: generate_captcha()?,
+        pow_challenge: String::from(""),
         form_id_prefix: "chat-box",
     };
 

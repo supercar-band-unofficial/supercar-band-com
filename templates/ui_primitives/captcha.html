@@ -8,8 +8,47 @@
         height="110"
     >
     <input type="hidden" name="captcha-id" value="{{ captcha_id }}">
+    <input type="hidden" name="pow-challenge" value="{{ pow_challenge }}">
+    <input type="hidden" name="pow-answer" value="">
     <div class="form-control">
         <label for="{{ form_id_prefix }}-captcha">Type the Characters Above</label>
         <input id="{{ form_id_prefix }}-captcha" name="captcha-entry" autocomplete="off">
     </div>
+    <script>
+        (() => {
+            async function proofOfWork(challenge, difficulty) {
+                let nonce = 0;
+                const prefix = '0'.repeat(difficulty);
+            
+                while (true) {
+                    const input = challenge + nonce;
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                    if (hashHex.startsWith(prefix)) {
+                        return { nonce, hash: hashHex };
+                    }
+
+                    nonce++;
+                }
+            }
+
+            const challenges = Array.from(document.querySelectorAll('[name="pow-challenge"]'));
+            challenges.forEach((challenge) => {
+                const answer = challenge.parentElement.querySelector('[name="pow-answer"]');
+                const form = challenge.closest('form');
+                if (!challenge?.value || !answer || !form) return;
+                answer.value = '';
+                proofOfWork(challenge.value, 4).then(result => {
+                    if (!challenge.parentElement) return;
+                    answer.value = result.nonce;
+                    form.dispatchEvent(new Event('supercar:pow-challenge-complete'));
+                }).catch(error => {
+                    if (!challenge.parentElement) return;
+                    form.dispatchEvent(new Event('supercar:pow-challenge-error'));
+                });
+            });
+        })();
+    </script>
 </section>

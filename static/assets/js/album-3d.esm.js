@@ -155,7 +155,6 @@ async function loadModelViewer() {
                         cdCaseDiscHolder.material = new THREE.MeshStandardMaterial();
                         cdCaseDiscHolder.material.color = new THREE.Color(assets.config.cd_case_disc_holder_color);
                         cdCaseDiscHolder.material.needsUpdate = true;
-                        console.log(cdCaseDiscHolder);
                     }
 
                     if (assets.config.cd_case_back_color) {
@@ -164,7 +163,6 @@ async function loadModelViewer() {
                         cdCaseBack.material = new THREE.MeshStandardMaterial();
                         cdCaseBack.material.color = new THREE.Color(assets.config.cd_case_back_color);
                         cdCaseBack.material.needsUpdate = true;
-                        console.log(cdCaseBack);
                     }
 
                     if (assets.config.cd_case_front_color) {
@@ -173,7 +171,6 @@ async function loadModelViewer() {
                         cdCaseFront.material = new THREE.MeshStandardMaterial();
                         cdCaseFront.material.color = new THREE.Color(assets.config.cd_case_front_color);
                         cdCaseFront.material.needsUpdate = true;
-                        console.log(cdCaseFront);
                     }
 
                     render();

@@ -12,7 +12,7 @@ use crate::ui_pages::sign_up::{ SignUpTemplate, SignUpContentTemplate };
 use crate::router::{ html_to_response };
 use crate::router::authn::{ AuthSession, Credentials, UserSession };
 use crate::router::context::{ BaseContext, Context, RouteParamContextGenerator };
-use crate::util::captcha::{ validate_captcha };
+use crate::util::captcha::{ get_captcha_pow_challenge_by_id, validate_captcha, validate_pow_challenge };
 use crate::util::rate_limit::rate_limit_exceeded;
 use crate::util::user::create_user_profile_href;
 use crate::router::validation::create_simple_report;
@@ -97,6 +97,10 @@ pub struct SignUpRequestParams {
         custom(is_valid_captcha(&self.captcha_id))
     )]
     pub captcha_entry: String,
+
+    #[route_param_source(source = "form", name = "pow-answer", default = "0")]
+    #[garde(skip)]
+    pub pow_answer: u64,
 }
 
 #[axum::debug_handler]
@@ -185,6 +189,11 @@ async fn validate_sign_up(form: &SignUpRequestParams) -> Result<(), Report> {
             create_simple_report(String::from("username_taken"), String::from("Username is already taken."))
         );
     }
+    if let Err(_) = validate_pow(&form.captcha_id, form.pow_answer) {
+        return Err(
+            create_simple_report(String::from("server_error"), String::from("Pow challenge failed."))
+        );
+    }
     if let Err(report) = form.validate() {
         return Err(report);
     }
@@ -199,6 +208,21 @@ async fn validate_username_not_taken(username: &str) -> Result<(), ()> {
     match database::get_user_by_username(username).await {
         Ok(_) => Err(()),
         Err(_) => Ok(()),
+    }
+}
+
+fn validate_pow(captcha_id: &str, pow_answer: u64) -> Result<(), ()> {
+    let pow_challenge = get_captcha_pow_challenge_by_id(captcha_id);
+
+    match pow_challenge {
+        Some(challenge) => {
+            if validate_pow_challenge(&challenge, pow_answer, 4) {
+                Ok(())
+            } else {
+                Err(())
+            }
+        },
+        None => Err(()),
     }
 }
 

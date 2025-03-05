@@ -15,7 +15,7 @@
         <script>
             (() => {
                 const siteChatboxForm = document.getElementById('site-chatbox-form');
-                siteChatboxForm.addEventListener("submit", function(event) {
+                siteChatboxForm.addEventListener('submit', function(event) {
                     event.preventDefault();
                     this.action = '/chat-box/?redirect-to=' + encodeURIComponent(window.location.href.split('#')[0] + '#site-chatbox');
                     this.submit();

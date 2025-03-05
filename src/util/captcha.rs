@@ -12,6 +12,7 @@ use chrono::prelude::{ DateTime, Utc };
 use captcha::{ Captcha, Geometry, CaptchaName };
 use captcha::filters::{ Cow, Grid, Noise, Wave, Dots };
 use rand::{ thread_rng, Rng };
+use sha2::{ Sha256, Digest };
 use tokio::sync::OnceCell;
 use uuid::Uuid;
 
@@ -36,6 +37,7 @@ impl fmt::Display for CaptchaValidationError {
 pub struct GeneratedCaptcha {
     pub chars: String,
     pub timestamp: DateTime<Utc>,
+    pub pow_challenge: String,
 }
 
 pub fn init_captchas() {
@@ -108,6 +110,15 @@ pub fn get_captcha_image_by_id(id: &str) -> Option<Vec<u8>> {
     } 
 }
 
+pub fn get_captcha_pow_challenge_by_id(id: &str) -> Option<String> {
+    let captchas = CAPTCHAS.get().expect("Captchas not initialized.");
+    let captchas_read = captchas.read().unwrap_or_else(|poisoned| poisoned.into_inner());
+    match captchas_read.get(id) {
+        Some(captcha) => Some(captcha.pow_challenge.clone()),
+        _ => None,
+    }
+}
+
 pub fn generate_captcha() -> Result<String, Box<dyn Error>> {
     let captchas = CAPTCHAS.get().expect("Captchas not initialized.");
     let mut captchas_write = captchas.write().unwrap_or_else(|poisoned| poisoned.into_inner());
@@ -120,6 +131,7 @@ pub fn generate_captcha() -> Result<String, Box<dyn Error>> {
     let generated_captcha = GeneratedCaptcha {
         chars: generate_captcha_chars(),
         timestamp: Utc::now(),
+        pow_challenge: format!("challenge_{}", Uuid::new_v4().to_string()),
     };
     let id = Uuid::new_v4().to_string();
     captchas_write.insert(id.clone(), generated_captcha);
@@ -147,4 +159,16 @@ pub fn validate_captcha(id: &str, captcha_entry: &str) -> Result<(), CaptchaVali
         },
         _ => Err(CaptchaValidationError { details: format!("Captcha with id {} not found.", id) }),
     }
+}
+
+pub fn validate_pow_challenge(challenge: &str, nonce: u64, difficulty: usize) -> bool {
+    let prefix = "0".repeat(difficulty);
+    let input = format!("{}{}", challenge, nonce);
+
+    let mut hasher = Sha256::new();
+    hasher.update(input.as_bytes());
+    let result = hasher.finalize();
+    let hash_hex = hex::encode(result);
+
+    hash_hex.starts_with(&prefix)
 }

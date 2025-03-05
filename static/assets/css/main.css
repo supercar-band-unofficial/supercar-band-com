@@ -1260,6 +1260,32 @@ a > .comment__profile__username {
     margin-top: 0.75rem;
 }
 
+.form--loading {
+    position: relative;
+}
+.form--loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(1px);
+    z-index: 100;
+}
+.form--loading::after {
+    content: 'Please wait a few seconds...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    text-align: center;
+    z-index: 101;
+}
+
 /**************\
 | Form Control |
 \**************/
