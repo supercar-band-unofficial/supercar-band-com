@@ -23,6 +23,14 @@
                 ]
             }'
         />
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "/assets/js/threejs/three.module.js",
+                    "three/addons/": "/assets/js/threejs/jsm/"
+                }
+            }
+        </script>
         <script defer src="/assets/js/htmx.min.js"></script>
         <script defer src="/assets/js/main.js?version=1.1"></script>
         {% block page_head %}{% endblock %}
