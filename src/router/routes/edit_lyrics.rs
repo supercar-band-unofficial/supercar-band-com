@@ -159,6 +159,7 @@ pub async fn post_create_lyrics(
         kanji_content: context.params.kanji,
         romaji_content: context.params.romaji,
         english_content: context.params.english,
+        comment: context.params.comment,
         ..Lyrics::default()
     };
 

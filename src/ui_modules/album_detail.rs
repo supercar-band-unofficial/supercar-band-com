@@ -16,6 +16,7 @@ pub struct AlbumDetailTemplate<'a> {
     pub album: Album,
     band_slug: String,
     songs: Vec<JoinedSongSlugs>,
+    has_lyrics_booklet: bool,
 }
 impl<'a> AlbumDetailTemplate<'a> {
     pub async fn new(
@@ -24,12 +25,14 @@ impl<'a> AlbumDetailTemplate<'a> {
         let AlbumDetailParams { album, band_slug } = params;
 
         let songs = database::get_song_slugs_by_ids(&album.song_ids()).await?;
+        let images = database::get_lyrics_booklet_images(&band_slug, &album.album_slug).await;
 
         Ok(AlbumDetailTemplate {
             phantom: PhantomData,
             album,
             band_slug,
             songs,
+            has_lyrics_booklet: images.len() > 0,
         })
     }
 }

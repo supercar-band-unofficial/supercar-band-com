@@ -617,6 +617,10 @@ body {
     cursor: pointer;
     position: relative;
 }
+.album-3d-opener.card {
+    box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.7);
+    border-width: 0;
+}
 .album-3d-opener__icon {
     position: absolute;
     display: flex;
@@ -816,6 +820,11 @@ a[href].button {
     padding: 0 1rem;
     cursor: pointer;
     white-space: nowrap;
+    transition: box-shadow 0.1s ease-in;
+}
+.button:active,
+a[href].button:active {
+    box-shadow: inset 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.25);
 }
 .button:hover,
 a[href].button:hover {
@@ -840,6 +849,11 @@ a[href].button--primary {
 a[href].button--primary:hover {
     background-color: var(--button-primary-hover-background-color);
     border-color: var(--button-primary-hover-background-color);
+    box-shadow: none;
+}
+.button--primary:active,
+a[href].button--primary:active {
+    box-shadow: inset 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.65);
 }
 .button--danger,
 a[href].button--danger {
@@ -867,6 +881,10 @@ a[href].button--primary.button--outline {
     border-color: var(--button-primary-background-color);
     color: var(--button-primary-background-color);
 }
+.button--primary.button--outline:active,
+a[href].button--primary.button--outline:active {
+    box-shadow: inset 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.25);
+}
 .button--primary.button--outline:hover,
 a[href].button--primary.button--outline:hover {
     border-color: var(--button-primary-hover-background-color);
@@ -883,6 +901,9 @@ a[href].button--danger.button--outline:hover {
     color: var(--button-danger-hover-background-color);
 }
 .button--elevated {
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 50, 0, 0.25);
+}
+.button--elevated.button--small {
     box-shadow: var(--box-shadow-small);
 }
 
