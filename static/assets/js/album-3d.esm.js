@@ -55,6 +55,7 @@ let bandAlbumPath = '';
 let isCdCaseOpen = false;
 
 async function loadTexture(url) {
+    if (!url) return;
     const loader = new THREE.TextureLoader();
     const texture = await loader.loadAsync(url);
     texture.flipY = false;
@@ -123,10 +124,20 @@ async function loadModelViewer() {
 
                     scene.add(model);
 
-                    const [bookletOutside, backInsertFront, backInsertBack, cdFront, cdFrontRoughness] = await Promise.all([
+                    const [
+                        bookletOutside,
+                        backInsertFront,
+                        backInsertFrontAlpha,
+                        backInsertBack,
+                        backInsertBackAlpha,
+                        cdFront,
+                        cdFrontRoughness
+                    ] = await Promise.all([
                         loadTexture(assets.textures.booklet_outside),
                         loadTexture(assets.textures.back_insert_front),
+                        loadTexture(assets.textures.back_insert_front_alpha),
                         loadTexture(assets.textures.back_insert_back),
+                        loadTexture(assets.textures.back_insert_back_alpha),
                         loadTexture(assets.textures.cd_front),
                         loadTexture(assets.textures.cd_front_roughness),
                     ]);
@@ -137,8 +148,16 @@ async function loadModelViewer() {
 
                     const backInsert = getModelPart('back_insert');
                     backInsert.children[0].material.map = backInsertFront;
+                    if (backInsertFrontAlpha) {
+                        backInsert.children[0].material.alphaMap = backInsertFrontAlpha;
+                        backInsert.children[0].material.alphaTest = 0.5;
+                    }
                     backInsert.children[0].material.needsUpdate = true;
                     backInsert.children[1].material.map = backInsertBack;
+                    if (backInsertBackAlpha) {
+                        backInsert.children[1].material.alphaMap = backInsertBackAlpha;
+                        backInsert.children[1].material.alphaTest = 0.5;
+                    }
                     backInsert.children[1].material.needsUpdate = true;
 
                     const cd = getModelPart('cd');
@@ -147,7 +166,15 @@ async function loadModelViewer() {
                     cd.children[0].material.roughnessMap = cdFrontRoughness;
                     cd.children[0].material.needsUpdate = true;
 
-                    assets.texturesToFree = [bookletOutside, backInsertFront, backInsertBack, cdFront, cdFrontRoughness];
+                    assets.texturesToFree = [
+                        bookletOutside,
+                        backInsertFront,
+                        backInsertFrontAlpha,
+                        backInsertBack,
+                        backInsertBackAlpha,
+                        cdFront,
+                        cdFrontRoughness
+                    ];
 
                     if (assets.config.cd_case_disc_holder_color) {
                         const cdCaseDiscHolder = getModelPart('cd_case_disc_holder');
@@ -236,14 +263,12 @@ async function loadModelViewer() {
 }
 
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     render();
-
 }
 
 function lerp(start, end, t) {
@@ -376,7 +401,7 @@ async function init() {
             document.getElementById('album-3d-viewer')?.remove();
             if (assets?.texturesToFree) {
                 for (const texture of assets.texturesToFree) {
-                    texture.dispose();
+                    texture?.dispose();
                 }
             }
             assets.texturesToFree = [];

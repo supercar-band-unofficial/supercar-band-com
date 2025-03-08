@@ -617,10 +617,6 @@ body {
     cursor: pointer;
     position: relative;
 }
-.album-3d-opener.card {
-    box-shadow: 0 0.15rem 0.15rem rgba(0, 0, 0, 0.7);
-    border-width: 0;
-}
 .album-3d-opener__icon {
     position: absolute;
     display: flex;
@@ -936,6 +932,10 @@ a[href].button--danger.button--outline:hover {
 .card--alt {
     background: var(--background-color-base-alt);
     border-color: var(--background-color-base-alt);
+}
+.card--elevated {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    border-width: 0;
 }
 a[href].card {
     text-decoration: none;
