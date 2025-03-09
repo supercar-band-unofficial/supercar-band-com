@@ -391,8 +391,10 @@ async function init() {
     albumCoverPreview.classList.add('album-3d-opener');
     albumCoverPreview.setAttribute('role', 'button');
     albumCoverPreview.setAttribute('tabindex', '0');
-    albumCoverPreview.innerHTML = albumCoverPreview.innerHTML
-        + '<span class="album-3d-opener__icon bi bi-zoom-in" aria-hidden="true"></span>';
+    if (!albumCoverPreview.querySelector('album-3d-opener__icon')) {
+        albumCoverPreview.innerHTML = albumCoverPreview.innerHTML
+            + '<span class="album-3d-opener__icon bi bi-zoom-in" aria-hidden="true"></span>';
+    }
     albumCoverPreview.addEventListener('click', loadModelViewer);
 
     document.addEventListener(
