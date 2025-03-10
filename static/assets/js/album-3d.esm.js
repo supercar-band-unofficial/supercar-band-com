@@ -26,6 +26,10 @@ let modelTransitions = {
             rotation: { x: 0, y: 0, z: 0 },
             pivot: new THREE.Vector3(0, 0, 0),
         },
+        cd_case_cover: {
+            rotation: { x: 0, y: 0, z: 0 },
+            pivot: new THREE.Vector3(0, 0, 0),
+        },
     },
     open: {
         booklet: {
@@ -33,6 +37,10 @@ let modelTransitions = {
             pivot: new THREE.Vector3(0, 0, 0),
         },
         cd_case_front: {
+            rotation: { x: 0, y: -Math.PI, z: 0 },
+            pivot: new THREE.Vector3(0, 0, 0),
+        },
+        cd_case_cover: {
             rotation: { x: 0, y: -Math.PI, z: 0 },
             pivot: new THREE.Vector3(0, 0, 0),
         },
@@ -46,6 +54,9 @@ let cameraTransitionStartTarget = null;
 let modelTransitionStart = null;
 let currentTransitionName = 'closed';
 let previousTransitionName = 'closed';
+
+let sceneHdri = null;
+let cdCaseModels = {};
 
 // Image assets by name
 let assets = {};
@@ -105,120 +116,168 @@ async function loadModelViewer() {
 
     scene = new THREE.Scene();
 
-    new RGBELoader()
-        .setPath('/assets/models/hdri/')
-        .load('venice_sunset_1k.hdr', function (texture) {
+    let isAssetLoadError = false;
+    
+    if (sceneHdri == null) {
+        try {
+            sceneHdri = await new Promise((resolve, reject) => {
+                new RGBELoader()
+                    .setPath('/assets/models/hdri/')
+                    .load('venice_sunset_1k.hdr', function (texture) {
+                        texture.mapping = THREE.EquirectangularReflectionMapping;
+                        resolve(texture);
+                    }, undefined, reject);
+            });
+        } catch (error) {
+            console.error(error);
+            isAssetLoadError = true;
+        }
+    }
 
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            scene.environment = texture;
+    scene.environment = sceneHdri;
 
-            render();
+    render();
 
-            const loader = new GLTFLoader().setPath('/assets/models/cd-case/');
-            loader.load(`${assets.config.cd_case_type}.glb`, async function (gltf) {
+    if (!cdCaseModels[assets.config.cd_case_type]) {
+        try {
+            cdCaseModels[assets.config.cd_case_type] = await new Promise((resolve, reject) => {
+                const loader = new GLTFLoader().setPath('/assets/models/cd-case/');
+                loader.load(`${assets.config.cd_case_type}.glb`, async function (gltf) {
+                    resolve(gltf.scene);
+                }, undefined, reject);
+            });
+        } catch (error) {
+            console.error(error);
+            isAssetLoadError = true;
+        }
+    }
 
-                try {
-                    model = gltf.scene;
+    try {
+        if (isAssetLoadError) {
+            throw new Error('Error loading scene or case models.');
+        }
 
-                    await renderer.compileAsync(model, camera, scene);
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.setClearColor(0x000000, 0);
+        rendererContainer.appendChild(renderer.domElement);
 
-                    scene.add(model);
+        scene.environment = sceneHdri;
+        model = cdCaseModels[assets.config.cd_case_type];
 
-                    const [
-                        bookletOutside,
-                        backInsertFront,
-                        backInsertFrontAlpha,
-                        backInsertBack,
-                        backInsertBackAlpha,
-                        cdFront,
-                        cdFrontRoughness
-                    ] = await Promise.all([
-                        loadTexture(assets.textures.booklet_outside),
-                        loadTexture(assets.textures.back_insert_front),
-                        loadTexture(assets.textures.back_insert_front_alpha),
-                        loadTexture(assets.textures.back_insert_back),
-                        loadTexture(assets.textures.back_insert_back_alpha),
-                        loadTexture(assets.textures.cd_front),
-                        loadTexture(assets.textures.cd_front_roughness),
-                    ]);
+        await renderer.compileAsync(model, camera, scene);
 
-                    const booklet = getModelPart('booklet');
-                    booklet.material.map = bookletOutside;
-                    booklet.material.needsUpdate = true;
+        scene.add(model);
 
-                    const backInsert = getModelPart('back_insert');
-                    backInsert.children[0].material.map = backInsertFront;
-                    if (backInsertFrontAlpha) {
-                        backInsert.children[0].material.alphaMap = backInsertFrontAlpha;
-                        backInsert.children[0].material.alphaTest = 0.5;
-                    }
-                    backInsert.children[0].material.needsUpdate = true;
-                    backInsert.children[1].material.map = backInsertBack;
-                    if (backInsertBackAlpha) {
-                        backInsert.children[1].material.alphaMap = backInsertBackAlpha;
-                        backInsert.children[1].material.alphaTest = 0.5;
-                    }
-                    backInsert.children[1].material.needsUpdate = true;
+        const [
+            bookletOutside,
+            bookletInside,
+            backInsertFront,
+            backInsertFrontAlpha,
+            backInsertBack,
+            backInsertBackAlpha,
+            cdFront,
+            cdFrontRoughness
+        ] = await Promise.all([
+            loadTexture(assets.textures.booklet_outside),
+            loadTexture(assets.textures.booklet_inside),
+            loadTexture(assets.textures.back_insert_front),
+            loadTexture(assets.textures.back_insert_front_alpha),
+            loadTexture(assets.textures.back_insert_back),
+            loadTexture(assets.textures.back_insert_back_alpha),
+            loadTexture(assets.textures.cd_front),
+            loadTexture(assets.textures.cd_front_roughness),
+        ]);
 
-                    const cd = getModelPart('cd');
-                    cd.children[0].material.map = cdFront;
-                    cd.children[0].material.metalnessMap = cdFrontRoughness;
-                    cd.children[0].material.roughnessMap = cdFrontRoughness;
-                    cd.children[0].material.needsUpdate = true;
+        if (assets.config.cd_case_type === 'slimline-jewel-case') {
+            const booklet = getModelPart('booklet');
+            booklet.children[0].material.map = bookletOutside;
+            booklet.children[0].material.needsUpdate = true;
+            booklet.children[1].material.map = bookletInside;
+            booklet.children[1].material.needsUpdate = true;
+        } else {
+            const booklet = getModelPart('booklet');
+            booklet.material.map = bookletOutside;
+            booklet.material.needsUpdate = true;
+        }
 
-                    assets.texturesToFree = [
-                        bookletOutside,
-                        backInsertFront,
-                        backInsertFrontAlpha,
-                        backInsertBack,
-                        backInsertBackAlpha,
-                        cdFront,
-                        cdFrontRoughness
-                    ];
+        if (backInsertFront && backInsertBack) {
+            const backInsert = getModelPart('back_insert');
+            backInsert.children[0].material.map = backInsertFront;
+            if (backInsertFrontAlpha) {
+                backInsert.children[0].material.alphaMap = backInsertFrontAlpha;
+                backInsert.children[0].material.alphaTest = 0.5;
+            }
+            backInsert.children[0].material.needsUpdate = true;
+            backInsert.children[1].material.map = backInsertBack;
+            if (backInsertBackAlpha) {
+                backInsert.children[1].material.alphaMap = backInsertBackAlpha;
+                backInsert.children[1].material.alphaTest = 0.5;
+            }
+            backInsert.children[1].material.needsUpdate = true;
+        }
 
-                    if (assets.config.cd_case_disc_holder_color) {
-                        const cdCaseDiscHolder = getModelPart('cd_case_disc_holder');
-                        cdCaseDiscHolder.material.dispose();
-                        cdCaseDiscHolder.material = new THREE.MeshStandardMaterial();
-                        cdCaseDiscHolder.material.color = new THREE.Color(assets.config.cd_case_disc_holder_color);
-                        cdCaseDiscHolder.material.needsUpdate = true;
-                    }
+        const cd = getModelPart('cd');
+        cd.children[0].material.map = cdFront;
+        cd.children[0].material.metalnessMap = cdFrontRoughness;
+        cd.children[0].material.roughnessMap = cdFrontRoughness;
+        cd.children[0].material.needsUpdate = true;
+        if (assets.config.cd_case_type === 'slimline-jewel-case') {
+            cd.children[1].material.iridescence = 1.0;
+            cd.children[1].material.iridescenceMap = cd.children[1].material.roughnessMap;
+            cd.children[1].material.iridescenceIOR = 1.7;
+            cd.children[1].material.iridescenceThicknessRange = [100, 800];
+            cd.children[1].material.sheen = 1.0;
+            cd.children[1].material.sheenRoughness = 0.0;
+            cd.children[1].material.thickness = 0.1;
+            cd.children[1].material.needsUpdate = true;
+        }
 
-                    if (assets.config.cd_case_back_color) {
-                        const cdCaseBack = getModelPart('cd_case_back');
-                        cdCaseBack.material.dispose();
-                        cdCaseBack.material = new THREE.MeshStandardMaterial();
-                        cdCaseBack.material.color = new THREE.Color(assets.config.cd_case_back_color);
-                        cdCaseBack.material.needsUpdate = true;
-                    }
+        assets.texturesToFree = [
+            bookletOutside,
+            backInsertFront,
+            backInsertFrontAlpha,
+            backInsertBack,
+            backInsertBackAlpha,
+            cdFront,
+            cdFrontRoughness
+        ];
 
-                    if (assets.config.cd_case_front_color) {
-                        const cdCaseFront = getModelPart('cd_case_front');
-                        cdCaseFront.material.dispose();
-                        cdCaseFront.material = new THREE.MeshStandardMaterial();
-                        cdCaseFront.material.color = new THREE.Color(assets.config.cd_case_front_color);
-                        cdCaseFront.material.needsUpdate = true;
-                    }
+        if (assets.config.cd_case_disc_holder_color) {
+            const cdCaseDiscHolder = getModelPart('cd_case_disc_holder');
+            cdCaseDiscHolder.material.dispose();
+            cdCaseDiscHolder.material = new THREE.MeshStandardMaterial();
+            cdCaseDiscHolder.material.color = new THREE.Color(assets.config.cd_case_disc_holder_color);
+            cdCaseDiscHolder.material.needsUpdate = true;
+        }
 
-                    render();
+        if (assets.config.cd_case_back_color) {
+            const cdCaseBack = getModelPart('cd_case_back');
+            cdCaseBack.material.dispose();
+            cdCaseBack.material = new THREE.MeshStandardMaterial();
+            cdCaseBack.material.color = new THREE.Color(assets.config.cd_case_back_color);
+            cdCaseBack.material.needsUpdate = true;
+        }
 
-                    document.getElementById('album-3d-viewer-loading').remove();
-                    document.getElementById('album-3d-viewer-controls').removeAttribute('hidden');
-                } catch (error) {
-                    handleLoadError();
-                }
-            }, undefined, handleLoadError);
+        if (assets.config.cd_case_front_color) {
+            const cdCaseFront = getModelPart('cd_case_front');
+            cdCaseFront.material.dispose();
+            cdCaseFront.material = new THREE.MeshStandardMaterial();
+            cdCaseFront.material.color = new THREE.Color(assets.config.cd_case_front_color);
+            cdCaseFront.material.needsUpdate = true;
+        }
 
-        }, undefined, handleLoadError);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.setClearColor(0x000000, 0);
-    rendererContainer.appendChild(renderer.domElement);
+        document.getElementById('album-3d-viewer-loading').remove();
+        document.getElementById('album-3d-viewer-controls').removeAttribute('hidden');
+    } catch (error) {
+        console.error(error);
+        handleLoadError();
+    }
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', render);
@@ -226,6 +285,9 @@ async function loadModelViewer() {
     controls.maxDistance = 90;
     controls.target.set(cameraPositions.closed.target.x, cameraPositions.closed.target.y, cameraPositions.closed.target.z);
     controls.update();
+
+    startTransition('closed');
+    render();
 
     window.addEventListener('resize', onWindowResize);
 
@@ -376,7 +438,7 @@ function transitionCamera() {
 }
 
 function render() {
-    renderer.render( scene, camera );
+    renderer?.render(scene, camera);
 }
 
 async function init() {
