@@ -167,7 +167,7 @@ async function loadModelViewer() {
         rendererContainer.appendChild(renderer.domElement);
 
         scene.environment = sceneHdri;
-        model = cdCaseModels[assets.config.cd_case_type];
+        model = cdCaseModels[assets.config.cd_case_type].clone(true);
 
         await renderer.compileAsync(model, camera, scene);
 
@@ -211,12 +211,18 @@ async function loadModelViewer() {
             if (backInsertFrontAlpha) {
                 backInsert.children[0].material.alphaMap = backInsertFrontAlpha;
                 backInsert.children[0].material.alphaTest = 0.5;
+            } else {
+                backInsert.children[0].material.alphaMap = undefined;
+                backInsert.children[0].material.alphaTest = 0;
             }
             backInsert.children[0].material.needsUpdate = true;
             backInsert.children[1].material.map = backInsertBack;
             if (backInsertBackAlpha) {
                 backInsert.children[1].material.alphaMap = backInsertBackAlpha;
                 backInsert.children[1].material.alphaTest = 0.5;
+            } else {
+                backInsert.children[1].material.alphaMap = undefined;
+                backInsert.children[1].material.alphaTest = 0.0;
             }
             backInsert.children[1].material.needsUpdate = true;
         }
