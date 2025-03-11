@@ -65,6 +65,8 @@ let bandAlbumPath = '';
 
 let isCdCaseOpen = false;
 
+const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
 async function loadTexture(url) {
     if (!url) return;
     const loader = new THREE.TextureLoader();
@@ -173,16 +175,7 @@ async function loadModelViewer() {
 
         scene.add(model);
 
-        const [
-            bookletOutside,
-            bookletInside,
-            backInsertFront,
-            backInsertFrontAlpha,
-            backInsertBack,
-            backInsertBackAlpha,
-            cdFront,
-            cdFrontRoughness
-        ] = await Promise.all([
+        const loadedTextures = await Promise.all([
             loadTexture(assets.textures.booklet_outside),
             loadTexture(assets.textures.booklet_inside),
             loadTexture(assets.textures.back_insert_front),
@@ -191,7 +184,95 @@ async function loadModelViewer() {
             loadTexture(assets.textures.back_insert_back_alpha),
             loadTexture(assets.textures.cd_front),
             loadTexture(assets.textures.cd_front_roughness),
+            loadTexture(assets.textures.cd_case),
+            loadTexture(assets.textures.cd_case_alpha),
+            loadTexture(assets.textures.cd_case_metalness),
+            loadTexture(assets.textures.cd_case_roughness),
         ]);
+        let [
+            bookletOutside,
+            bookletInside,
+            backInsertFront,
+            backInsertFrontAlpha,
+            backInsertBack,
+            backInsertBackAlpha,
+            cdFront,
+            cdFrontRoughness,
+            cdCase,
+            cdCaseAlpha,
+            cdCaseMetalness,
+            cdCaseRoughness,
+        ] = loadedTextures;
+        const textures = {
+            booklet_outside: bookletOutside,
+            booklet_inside: bookletInside,
+            back_insert_front: backInsertFront,
+            back_insert_front_alpha: backInsertFrontAlpha,
+            back_insert_back: backInsertBack,
+            back_insert_back_alpha: backInsertBackAlpha,
+            cd_front: cdFront,
+            cd_front_roughness: cdFrontRoughness,
+            cd_case: cdCase,
+            cd_case_alpha: cdCaseAlpha,
+            cd_case_metalness: cdCaseMetalness,
+            cd_case_roughness: cdCaseRoughness,
+        };
+
+        if (assets.config.cd_case_type === 'slimline-jewel-case') {
+            const cd_case_disc_holder = getModelPart('cd_case_disc_holder');
+            const cd_case_cover = getModelPart('cd_case_cover');
+            if (cdCase) {
+                cd_case_disc_holder.material.map = cdCase;
+                cd_case_cover.material.map = cdCase;
+            } else {
+                cd_case_disc_holder.material.map = undefined;
+                cd_case_cover.material.map = undefined;
+            }
+
+            cdCaseAlpha = cdCaseAlpha || textures[assets.config.cd_case_alpha_texture];
+            if (cdCaseAlpha) {
+                cd_case_disc_holder.material.opacity = 1;
+                cd_case_disc_holder.material.alphaMap = cdCaseAlpha;
+                cd_case_cover.material.opacity = 1;
+                cd_case_cover.material.alphaMap = cdCaseAlpha;
+            } else {
+                cd_case_disc_holder.material.opacity = 0.2235649824142456;
+                cd_case_disc_holder.material.alphaMap = undefined;
+                cd_case_cover.material.opacity = 0.2235649824142456;
+                cd_case_cover.material.alphaMap = undefined;
+            }
+
+            cdCaseMetalness = cdCaseMetalness || textures[assets.config.cd_case_metalness_texture];
+            if (cdCaseMetalness) {
+                cd_case_disc_holder.material.metalness = 1;
+                cd_case_disc_holder.material.metalnessMap = cdCaseMetalness;
+                cd_case_cover.material.metalness = 1;
+                cd_case_cover.material.metalnessMap = cdCaseMetalness;
+            } else {
+                cd_case_disc_holder.material.metalness = 0;
+                cd_case_disc_holder.material.metalnessMap = undefined;
+                cd_case_cover.material.metalness = 0;
+                cd_case_cover.material.metalnessMap = undefined;
+            }
+
+            cdCaseRoughness = cdCaseRoughness || textures[assets.config.cd_case_roughness_texture];
+            if (cdCaseRoughness) {
+                cd_case_disc_holder.material.roughness = 1;
+                cd_case_disc_holder.material.roughnessMap = cdCaseRoughness;
+                cd_case_cover.material.roughness = 1;
+                cd_case_cover.material.roughnessMap = cdCaseRoughness;
+            } else {
+                cd_case_disc_holder.material.roughness = 0.0320277065038681;
+                cd_case_disc_holder.material.roughnessMap = undefined;
+                cd_case_cover.material.roughness = 0.0320277065038681;
+                cd_case_cover.material.roughnessMap = undefined;
+            }
+            console.log(cd_case_cover.material);
+            
+            cd_case_disc_holder.material.needsUpdate = true;
+            cd_case_cover.material.needsUpdate = true;
+
+        }
 
         if (assets.config.cd_case_type === 'slimline-jewel-case') {
             const booklet = getModelPart('booklet');

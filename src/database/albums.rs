@@ -388,6 +388,12 @@ pub struct Album3dConfig {
     pub cd_case_disc_holder_color: String,
     #[serde(default)]
     pub cd_case_front_color: String,
+    #[serde(default)]
+    pub cd_case_alpha_texture: String,
+    #[serde(default)]
+    pub cd_case_metalness_texture: String,
+    #[serde(default)]
+    pub cd_case_roughness_texture: String,
 }
 
 pub struct Album3dAssets {
