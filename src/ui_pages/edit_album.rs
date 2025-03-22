@@ -130,6 +130,7 @@ async fn create_common_params<'a>(context: &'a EditAlbumPageContext) -> Result<E
         };
         let mut songs: Vec<String> = context.params.songs
             .split(',')
+            .map(|s| s.replace("%2C", ","))
             .map(|song| {
                 song.to_string()
             })

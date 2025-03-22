@@ -387,10 +387,11 @@ pub async fn put_update_album(
     let user = &context.user.as_ref().unwrap();
     let username = &user.username;
 
-    let mut songs: Vec<&str> = context.params.songs
+    let mut songs: Vec<String> = context.params.songs
         .split(',')
+        .map(|s| s.replace("%2C", ","))
         .collect::<Vec<_>>();
-    songs.resize(40, "");
+    songs.resize(40, String::from(""));
     let song_ids: Vec<Option<i32>>;
     match database::create_songs_by_names(&songs, existing_album.id, existing_album.band).await {
         Ok(ids) => {

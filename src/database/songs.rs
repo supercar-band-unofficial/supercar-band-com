@@ -144,7 +144,7 @@ pub async fn get_song_slugs_by_ids(ids: &Vec<i32>) -> Result<Vec<JoinedSongSlugs
     Ok(result)
 }
 
-pub async fn create_songs_by_names(names: &Vec<&str>, album_id: i32, band_id: i32) -> Result<Vec<Option<i32>>, Box<dyn Error + Send + Sync>> {
+pub async fn create_songs_by_names(names: &Vec<String>, album_id: i32, band_id: i32) -> Result<Vec<Option<i32>>, Box<dyn Error + Send + Sync>> {
     if names.len() == 0 {
         return Ok(Vec::new());
     }

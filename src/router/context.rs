@@ -250,7 +250,7 @@ where
                                                                             if field_value.len() < expected_length {
                                                                                 field_value.resize(expected_length, String::from(""));
                                                                             }
-                                                                            field_value.insert(index, text);
+                                                                            field_value.insert(index, text.replace(",", "%2C"));
                                                                         }
                                                                     }
                                                                 }
